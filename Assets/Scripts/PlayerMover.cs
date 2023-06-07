@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class MageMover : MonoBehaviour
+public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float runSpeed;
