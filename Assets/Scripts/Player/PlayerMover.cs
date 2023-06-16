@@ -15,6 +15,7 @@ public class PlayerMover : MonoBehaviour
     private CharacterController controller;
     private Animator animator;
     private Rig rig;
+    private PlayerStatusController statusController;
 
     private Vector3 moveDir;
     private float ySpeed = 0;
@@ -25,6 +26,7 @@ public class PlayerMover : MonoBehaviour
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         rig = GetComponentInChildren<Rig>();
+        statusController = GetComponent<PlayerStatusController>();
     }
 
     private void OnEnable()
@@ -46,6 +48,7 @@ public class PlayerMover : MonoBehaviour
         {
             if (run && animator.GetFloat("YInput") > 0.1)
             {
+                statusController.DecreaseSP(1 * Time.deltaTime);
                 controller.Move(transform.forward * moveDir.z * runSpeed * Time.deltaTime);
                 controller.Move(transform.right * moveDir.x * runSpeed * Time.deltaTime);
             }
@@ -117,7 +120,7 @@ public class PlayerMover : MonoBehaviour
         run = value.isPressed;
 
         animator.SetBool("Run", run);
-        if (run )
+        if (run && statusController.GetCurrentSP() > 0)
         {
             animator.SetLayerWeight(1, 0);
             rig.weight = 0f;
@@ -128,6 +131,7 @@ public class PlayerMover : MonoBehaviour
             rig.weight = 1f;
         }
     }
+
 
     private bool GroundCheck()
     {

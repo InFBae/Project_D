@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class Monster : MonoBehaviour, IHittable
 {  
@@ -11,8 +12,13 @@ public abstract class Monster : MonoBehaviour, IHittable
     protected Rigidbody rb;
 
     protected MonsterData monsterData;
-    protected float curHP;
 
+    private float curHP;
+
+    public UnityEvent<float> OnHPChanged;
+    public float MaxHP { get { return monsterData.maxHP; } }
+    public float CurHP { get { return curHP; } set { curHP = value; OnHPChanged?.Invoke(CurHP); } }
+    
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
@@ -22,7 +28,7 @@ public abstract class Monster : MonoBehaviour, IHittable
     }
     public virtual void TakeHit(float damage)
     {
-        curHP -= damage;
+        CurHP -= damage;
     }
 
     public virtual void Die()
