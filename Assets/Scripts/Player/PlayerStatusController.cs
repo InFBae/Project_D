@@ -7,7 +7,7 @@ public class PlayerStatusController : MonoBehaviour, IHittable
     [SerializeField] private StatusInfoSceneUI statusInfoSceneUI;
     private PlayerStatusData statusData;
     private const int HP = 0, SP = 1, DP = 2;
-    
+
     private void Awake()
     {
         statusData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerStatusData");
@@ -21,6 +21,7 @@ public class PlayerStatusController : MonoBehaviour, IHittable
         curSP = maxSP;
         spRechargeTime = statusData.spRechargeTime;
         curDP = statusData.DP;
+
     }
 
     private void Update()

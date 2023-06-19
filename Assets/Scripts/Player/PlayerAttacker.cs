@@ -7,47 +7,20 @@ public class PlayerAttacker : MonoBehaviour
 {
     private Animator animator;
     private PlayerStatusController statusController;
+    private PlayerStateController stateController;
     private PlayerStatusData statusData;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         statusController = GetComponent<PlayerStatusController>();
+        stateController = GetComponent<PlayerStateController>();
         statusData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerStatusData");
     }
 
     private void Start()
     {
         attackCooltime = statusData.weaponData.attackCooltime;
-    }
-    private void OnEnable()
-    {
-        StartCoroutine(AttackRoutine());
-    }
-
-    private void OnDisable()
-    {
-        StopAllCoroutines();
-    }
-
-    private void OnAttack(InputValue inputValue)
-    {
-        if (animator.GetBool("Run") || animator.GetBool("Block"))
-        {
-            animator.ResetTrigger("Attack");
-            return;
-        }        
-        animator.SetTrigger("Attack");
-    }
-    private void OnBlock(InputValue inputValue)
-    {
-        if (animator.GetBool("Run"))
-        {
-            animator.SetBool("Block", false);
-            return;
-        }
-        bool isBlocking = inputValue.isPressed;
-        animator.SetBool("Block", isBlocking);
     }
 
     private bool isAttacking;
@@ -65,9 +38,10 @@ public class PlayerAttacker : MonoBehaviour
 
             currentCooltime = 0;
             yield return new WaitForSeconds(attackCooltime);
-
             
         }     
     }
+
+
 
 }
