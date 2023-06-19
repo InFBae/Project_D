@@ -26,7 +26,7 @@ public class PlayerMover : MonoBehaviour
         animator = GetComponent<Animator>();
         rig = GetComponentInChildren<Rig>();
         statusController = GetComponent<PlayerStatusController>();
-        stateController = GetComponentInChildren<PlayerStateController>();
+        stateController = GetComponent<PlayerStateController>();
     }
 
     public Coroutine moveRoutine;
@@ -38,10 +38,12 @@ public class PlayerMover : MonoBehaviour
             {
                 animator.SetLayerWeight(1, 0);
                 rig.weight = 0f;
+
                 if (statusController.GetCurrentSP() < 1 * Time.deltaTime)
                 {
                     stateController.CurState = PlayerStateController.State.Walking;
                 }
+
                 statusController.DecreaseSP(1 * Time.deltaTime);
                 controller.Move(transform.forward * stateController.MoveDir.z * runSpeed * Time.deltaTime);
                 controller.Move(transform.right * stateController.MoveDir.x * runSpeed * Time.deltaTime);
@@ -58,8 +60,6 @@ public class PlayerMover : MonoBehaviour
                 yield break;
             }
 
-            //Look();
-
             yield return null;
         }
     }
@@ -73,7 +73,7 @@ public class PlayerMover : MonoBehaviour
     }
 
     // 캐릭터가 중력을 받도록 설정
-    Coroutine fallRoutine;
+    public Coroutine fallRoutine;
     public IEnumerator FallRoutine()
     {
         while (true)
@@ -91,10 +91,12 @@ public class PlayerMover : MonoBehaviour
 
     public IEnumerator LandRollRoutine()
     {
-        float landRollTime = 0.8f;
+        float landRollTime = 0.7f;
         float curTime = 0f;
+
         animator.SetLayerWeight(1, 0);
         rig.weight = 0f;
+
         statusController.DecreaseSP(2);
         while (curTime < landRollTime)
         {
@@ -102,8 +104,10 @@ public class PlayerMover : MonoBehaviour
             controller.Move(transform.forward * 3 * Time.deltaTime);
             yield return null;
         }
+
         rig.weight = 1f;
-        if (stateController.MoveDir.sqrMagnitude > 0 )
+
+        if (stateController.MoveDir.sqrMagnitude > 0.1 )
         {
             stateController.CurState = PlayerStateController.State.Walking;
         }

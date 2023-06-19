@@ -28,12 +28,10 @@ public class PlayerStateController : MonoBehaviour
         
         CurState = State.Idle;
     }
-
     private void Start()
     {
-        StartCoroutine(mover.FallRoutine());
+        mover.fallRoutine = StartCoroutine(mover.FallRoutine());
     }
-
     private void OnEnable()
     {
         OnStateChanged += ChangeState;
@@ -41,6 +39,7 @@ public class PlayerStateController : MonoBehaviour
 
     private void OnDisable()
     {
+        StopCoroutine(mover.fallRoutine);
         OnStateChanged -= ChangeState; 
     }
 
@@ -55,6 +54,7 @@ public class PlayerStateController : MonoBehaviour
     private void ChangeState(State state)
     {
         animator.SetInteger("CurState", (int)state);
+
         if (state == State.Idle) { }
         else if (state == State.Walking || state == State.Running)
         {
@@ -64,7 +64,7 @@ public class PlayerStateController : MonoBehaviour
         }
         else if (state == State.Blocking)
         {
-            
+            animator.SetLayerWeight(1, 1);
         }
         else if (state == State.Attacking)
         {
@@ -83,17 +83,19 @@ public class PlayerStateController : MonoBehaviour
         Vector2 input = value.Get<Vector2>();
         moveDir = new Vector3(input.x, 0, input.y);
         
-        if (input.sqrMagnitude > 0)
+        if(curState != State.Falling && curState != State.LandRolling)
         {
-            CurState = State.Walking;
-            animator.SetInteger("CurState", (int)State.Walking);
-        }
-        else
-        {
-            curState = State.Idle;
-            animator.SetInteger("CurState", (int)State.Idle);
-        }
-           
+            if (input.sqrMagnitude > 0)
+            {
+                CurState = State.Walking;
+                animator.SetInteger("CurState", (int)State.Walking);
+            }
+            else
+            {
+                curState = State.Idle;
+                animator.SetInteger("CurState", (int)State.Idle);
+            }
+        }      
     }
 
     // 플레이어가 땅에서 앞으로 움직이고 있고
@@ -103,20 +105,25 @@ public class PlayerStateController : MonoBehaviour
     private void OnRun(InputValue value)
     {
         // Idle 이나 Walking 상태가 아니라면 상태를 변경하지 않는다.
-        if (CurState > State.Walking )
+        if (CurState > State.Running )
         {
             return;
         }
         bool running = value.isPressed;
+
         if (running &&
            animator.GetFloat("YInput") > 0.1 &&
            statusController.GetCurrentSP() > 1 * Time.deltaTime)
         {
             CurState = State.Running;
         }
+        else if(MoveDir.sqrMagnitude > 0.1)
+        {
+            CurState = State.Walking;
+        }
         else
         {
-            curState = State.Walking;
+            CurState = State.Idle;
         }
     }
 
@@ -141,6 +148,14 @@ public class PlayerStateController : MonoBehaviour
 
         if (!Physics.SphereCast(transform.position + Vector3.up * 1f, 0.5f, Vector3.down, out hit, 0.8f))
             CurState = State.Falling;
+        else
+        {
+            if(CurState == State.Falling)
+            {
+                if (MoveDir.sqrMagnitude > 0.1) { CurState = State.Walking; }
+                else { CurState = State.Idle; }
+            }
+        }
     }
 
     // Idle 이나 Walking 상태일 때와 이미 공격 중일 때 Attack
@@ -154,8 +169,7 @@ public class PlayerStateController : MonoBehaviour
         else
         {
             animator.ResetTrigger("Attack");
-        }
-        
+        }      
     }
 
     // Idle 이나 Walking 상태일 때 Block
@@ -171,6 +185,10 @@ public class PlayerStateController : MonoBehaviour
         if(isBlocking)
         {
             CurState = State.Blocking;
-        }       
+        }
+        else
+        {
+
+        }
     }
 }
