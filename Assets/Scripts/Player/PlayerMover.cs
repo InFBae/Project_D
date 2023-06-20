@@ -10,6 +10,7 @@ public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
+    [SerializeField] private float rollDistance;
     [SerializeField] Transform lookPoint;
 
     private CharacterController controller;
@@ -48,7 +49,9 @@ public class PlayerMover : MonoBehaviour
                 controller.Move(transform.forward * stateController.MoveDir.z * runSpeed * Time.deltaTime);
                 controller.Move(transform.right * stateController.MoveDir.x * runSpeed * Time.deltaTime);
             }
-            else if(stateController.CurState == PlayerStateController.State.Walking)
+            else if(stateController.CurState == PlayerStateController.State.Walking ||
+                stateController.CurState == PlayerStateController.State.Attacking ||
+                stateController.CurState == PlayerStateController.State.Blocking)
             {
                 rig.weight = 1f;
                 controller.Move(transform.forward * stateController.MoveDir.z * walkSpeed * Time.deltaTime);
@@ -56,7 +59,7 @@ public class PlayerMover : MonoBehaviour
             }
             else
             {
-                rig.weight = 1f;
+                rig.weight = 0f;
                 yield break;
             }
 
@@ -65,6 +68,20 @@ public class PlayerMover : MonoBehaviour
     }
 
     // AimPoint 바라보도록 회전
+
+    public Coroutine lookRoutine;
+
+    public IEnumerator LookRoutine()
+    {
+        while (true)
+        {
+            Vector3 point = lookPoint.position;
+            point.y = transform.position.y;
+            transform.LookAt(point);
+
+            yield return null;
+        }
+    }
     public void Look()
     {
         Vector3 point = lookPoint.position;
@@ -94,6 +111,11 @@ public class PlayerMover : MonoBehaviour
         float landRollTime = 0.7f;
         float curTime = 0f;
 
+        Vector3 rollDir = (transform.forward * stateController.MoveDir.z +
+            transform.right * stateController.MoveDir.x + 
+            transform.position);
+        transform.LookAt(rollDir);
+
         animator.SetLayerWeight(1, 0);
         rig.weight = 0f;
 
@@ -101,20 +123,15 @@ public class PlayerMover : MonoBehaviour
         while (curTime < landRollTime)
         {
             curTime += Time.deltaTime;
-            controller.Move(transform.forward * 3 * Time.deltaTime);
+            controller.Move(transform.forward * rollDistance * Time.deltaTime);
             yield return null;
         }
 
         rig.weight = 1f;
+        moveRoutine = StartCoroutine(MoveRoutine());
+        lookRoutine = StartCoroutine(LookRoutine());
 
-        if (stateController.MoveDir.sqrMagnitude > 0.1 )
-        {
-            stateController.CurState = PlayerStateController.State.Walking;
-        }
-        else
-        {
-            stateController.CurState = PlayerStateController.State.Idle;
-        }
+        stateController.CurState = (PlayerStateController.State)stateController.IsMoving();
     }
 
 }

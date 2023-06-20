@@ -14644,6 +14644,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 193676, guid: 50de44d10630cfc43a286af857d33846, type: 3}
   m_PrefabInstance: {fileID: 949619454}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &380819490 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1388180401, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
+  m_PrefabInstance: {fileID: 4258858135489183194}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc3d9f54b7c28524ab196157cf2eadaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &381253801 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 122580, guid: b55c5c89af6466b4eac975ed5d76d2cb, type: 3}
@@ -102392,10 +102403,22 @@ PrefabInstance:
       propertyPath: statusInfoSceneUI
       value: 
       objectReference: {fileID: 2022651164}
+    - target: {fileID: 1388180401, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: e3d45445a4db97446aacda8b59472df8, type: 2}
+    - target: {fileID: 1474286056789075203, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
+      propertyPath: m_Name
+      value: OHSword
+      objectReference: {fileID: 0}
     - target: {fileID: 4258858133939340250, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
       propertyPath: m_Data.m_SourceObjects.m_Item0.transform
       value: 
       objectReference: {fileID: 1092173569}
+    - target: {fileID: 4258858134412639602, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
+      propertyPath: curWeapon
+      value: 
+      objectReference: {fileID: 380819490}
     - target: {fileID: 4258858134412639603, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
       propertyPath: lookPoint
       value: 
@@ -102448,5 +102471,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Warrior
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3742736758796835501, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}

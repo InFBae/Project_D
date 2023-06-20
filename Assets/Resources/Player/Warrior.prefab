@@ -3058,6 +3058,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 3
   runSpeed: 5
+  rollDistance: 4
   lookPoint: {fileID: 0}
 --- !u!114 &4258858134412639602
 MonoBehaviour:
@@ -3071,6 +3072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75149d540a55249498b6dfca22278e35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  continuousAttack: 0
 --- !u!114 &4258858134412639601
 MonoBehaviour:
   m_ObjectHideFlags: 0

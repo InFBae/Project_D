@@ -6,8 +6,8 @@ public class OHSword : Weapon
 {
     protected override void Awake()
     {
-        weaponName = "1HSword";
-        base.Awake();
+        weaponName = "OHSword";
+        base.Awake();       
     }
 
     private void OnTriggerEnter(Collider other)

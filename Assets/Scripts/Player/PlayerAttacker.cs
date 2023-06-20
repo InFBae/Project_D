@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,8 @@ public class PlayerAttacker : MonoBehaviour
     private PlayerStateController stateController;
     private PlayerStatusData statusData;
 
+    [SerializeField] Weapon curWeapon;
+     
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -20,25 +23,54 @@ public class PlayerAttacker : MonoBehaviour
 
     private void Start()
     {
-        attackCooltime = statusData.weaponData.attackCooltime;
+        attackTime = curWeapon.GetAttackCoolTime();
     }
 
-    private bool isAttacking;
-    private float currentCooltime;
-    private float attackCooltime;
-    IEnumerator AttackRoutine()
-    {
+    public bool continuousAttack;
+    private float currentAttackTime;
+    private float attackTime;
+
+    public Coroutine attackRoutine;
+    public IEnumerator AttackRoutine()
+    {        
         while (true)
         {
-            if (isAttacking)
-            {            
-                yield return null;
-                continue;
+            // 공격 중일 때
+            if (stateController.CurState == PlayerStateController.State.Attacking &&
+                statusController.GetCurrentSP() >= 2 &&
+                animator.GetBool("ContinuousAttack"))
+            {
+                animator.SetBool("IsAttacking", true);
+                animator.SetBool("ContinuousAttack", false);
+                curWeapon?.EnableCollider();
+                statusController.DecreaseSP(2);
+                // 공격 시간만큼 공격 실행
+                currentAttackTime = 0;
+                while (currentAttackTime < attackTime)
+                {
+                    currentAttackTime += Time.deltaTime;
+                    yield return null;
+                }
+                animator.SetBool("IsAttacking", false);
+                curWeapon?.DisableCollider();
+                if (!animator.GetBool("ContinuousAttack"))
+                {
+                    stateController.CurState = (PlayerStateController.State)stateController.IsMoving();
+                }
             }
-
-            currentCooltime = 0;
-            yield return new WaitForSeconds(attackCooltime);
-            
+            else if (stateController.CurState == PlayerStateController.State.Blocking)
+            {
+                // TODO : 방패 사용중 효과
+            }
+            else // 공격중도 방어중도 아닐경우 어택루틴 종료
+            {
+                animator.SetLayerWeight(1, 0);
+                animator.SetBool("ContinuousAttack", false);
+                stateController.CurState = (PlayerStateController.State)stateController.IsMoving();
+                yield break;
+            }
+           
+            yield return null;            
         }     
     }
 

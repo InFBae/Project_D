@@ -30,7 +30,9 @@ public class PlayerStateController : MonoBehaviour
     }
     private void Start()
     {
-        mover.fallRoutine = StartCoroutine(mover.FallRoutine());
+        mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
+        mover.fallRoutine = mover.StartCoroutine(mover.FallRoutine());
+        mover.lookRoutine = mover.StartCoroutine(mover.LookRoutine());
     }
     private void OnEnable()
     {
@@ -39,16 +41,14 @@ public class PlayerStateController : MonoBehaviour
 
     private void OnDisable()
     {
-        StopCoroutine(mover.fallRoutine);
         OnStateChanged -= ChangeState; 
     }
 
     private void Update()
     {
-        animator.SetFloat("XInput", moveDir.x, 0.1f, Time.deltaTime);
-        animator.SetFloat("YInput", moveDir.z, 0.1f, Time.deltaTime);
+        MoveDirCheck();
         GroundCheck();
-        mover.Look();
+        MovingCheck();
     }
 
     private void ChangeState(State state)
@@ -59,20 +59,26 @@ public class PlayerStateController : MonoBehaviour
         else if (state == State.Walking || state == State.Running)
         {
             if (mover.moveRoutine != null)
-                StopCoroutine(mover.moveRoutine);
-            mover.moveRoutine = StartCoroutine(mover.MoveRoutine());
+                mover.StopCoroutine(mover.moveRoutine);
+            mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
         }
-        else if (state == State.Blocking)
+        else if (state == State.Blocking || state == State.Attacking)
         {
+            if (mover.moveRoutine != null)
+                mover.StopCoroutine(mover.moveRoutine);
+            mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
             animator.SetLayerWeight(1, 1);
-        }
-        else if (state == State.Attacking)
-        {
-            
+            attacker.attackRoutine = attacker.StartCoroutine(attacker.AttackRoutine());
         }
         else if (state == State.LandRolling)
         {
-            mover.StartCoroutine(mover.LandRollRoutine());
+            if(mover.lookRoutine != null)
+                mover.StopCoroutine(mover.lookRoutine);
+            if(mover.moveRoutine != null)
+                mover.StopCoroutine(mover.moveRoutine);
+            if (attacker.attackRoutine != null)
+                attacker.StopCoroutine(attacker.attackRoutine);
+            mover.StartCoroutine(mover.LandRollRoutine());           
         }
     }
 
@@ -83,18 +89,9 @@ public class PlayerStateController : MonoBehaviour
         Vector2 input = value.Get<Vector2>();
         moveDir = new Vector3(input.x, 0, input.y);
         
-        if(curState != State.Falling && curState != State.LandRolling)
+        if(curState <= State.Walking)
         {
-            if (input.sqrMagnitude > 0)
-            {
-                CurState = State.Walking;
-                animator.SetInteger("CurState", (int)State.Walking);
-            }
-            else
-            {
-                curState = State.Idle;
-                animator.SetInteger("CurState", (int)State.Idle);
-            }
+            CurState = (State)this.IsMoving();
         }      
     }
 
@@ -117,13 +114,9 @@ public class PlayerStateController : MonoBehaviour
         {
             CurState = State.Running;
         }
-        else if(MoveDir.sqrMagnitude > 0.1)
-        {
-            CurState = State.Walking;
-        }
         else
         {
-            CurState = State.Idle;
+            CurState = (State)this.IsMoving();
         }
     }
 
@@ -140,6 +133,12 @@ public class PlayerStateController : MonoBehaviour
         }
     }
 
+    private void MoveDirCheck()
+    {
+        animator.SetFloat("XInput", moveDir.x, 0.1f, Time.deltaTime);
+        animator.SetFloat("YInput", moveDir.z, 0.1f, Time.deltaTime);
+    }
+
     // 땅에 닿아 있는지 체크
     // 공중에 있다면 Falling
     private void GroundCheck()
@@ -152,31 +151,43 @@ public class PlayerStateController : MonoBehaviour
         {
             if(CurState == State.Falling)
             {
-                if (MoveDir.sqrMagnitude > 0.1) { CurState = State.Walking; }
-                else { CurState = State.Idle; }
+                CurState = (State)this.IsMoving();
             }
+        }
+    }
+
+    private void MovingCheck()
+    {
+        if(this.IsMoving() > 0)
+        {
+            animator.SetBool("IsMoving", true);
+        }
+        else
+        {
+            animator.SetBool("IsMoving", false);
         }
     }
 
     // Idle 이나 Walking 상태일 때와 이미 공격 중일 때 Attack
     private void OnAttack(InputValue inputValue)
     {
-        // Idle 이나 Walking 또는 Attack 일 때 Attack 트리거 발동
-        if (CurState <= State.Walking || CurState == State.Attacking)
+        // Idle 이나 Walking 또는 Attack 일 때 IsAttacking은 true
+        if (CurState <= State.Walking)
         {
-            animator.SetTrigger("Attack");
+            animator.SetBool("ContinuousAttack", true);
+            CurState = State.Attacking;
         }
-        else
+        else if (CurState == State.Attacking)
         {
-            animator.ResetTrigger("Attack");
-        }      
+            animator.SetBool("ContinuousAttack", true);
+        }
     }
 
     // Idle 이나 Walking 상태일 때 Block
     private void OnBlock(InputValue inputValue)
     {
         // Idle 이나 Walking이 아닐 경우 return
-        if (CurState > State.Walking)
+        if (CurState > State.Walking && CurState != State.Blocking)
         {
             return;
         }
@@ -188,7 +199,7 @@ public class PlayerStateController : MonoBehaviour
         }
         else
         {
-
+            CurState = (State)this.IsMoving();
         }
     }
 }

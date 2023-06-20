@@ -9,5 +9,4 @@ public class PlayerStatusData : ScriptableObject
     public float maxSP;
     public float spRechargeTime;
     public float DP;
-    public WeaponData weaponData;
 }
