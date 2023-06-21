@@ -13,4 +13,11 @@ public static class Extension
     {
         return component != null && component.gameObject.activeInHierarchy;
     }
+
+    public static int IsMoving(this PlayerStateController playerStateController)
+    {
+        if (playerStateController.MoveDir.sqrMagnitude > 0.1)
+            return 1;
+        else return 0;
+    }
 }

@@ -9,7 +9,7 @@ public class Slime : Monster
 {
     [SerializeField] Collider attackCollider;
 
-    public enum State { Idle, Trace, Returning, Die, Size }
+    public enum State { Idle, Trace, Die, Size }
     StateMachine<State, Slime> stateMachine;
     
     private GameObject target;
@@ -19,11 +19,13 @@ public class Slime : Monster
     {
         base.Awake();
         InitData();
+        
         attackCollider.gameObject.SetActive(false);
 
         stateMachine = new StateMachine<State, Slime>(this);
         stateMachine.AddState(State.Idle, new IdleState(this, stateMachine));
         stateMachine.AddState(State.Trace, new TraceState(this, stateMachine));
+        stateMachine.AddState(State.Die, new DieState(this, stateMachine));
     }
 
     private void Start()
@@ -36,18 +38,23 @@ public class Slime : Monster
     }
     public override void TakeHit(float damage)
     {
-        curHP -= damage;
+        CurHP -= damage;
         animator.SetTrigger("gotHit");
-        if(curHP < 0)
+        if(CurHP < 0)
         {
             stateMachine.ChangeState(State.Die);
         }
     }
 
+    public override void Die()
+    {
+        base.Die();
+    }
+
     private void InitData()
     {
-        monsterData = GameManager.Resource.Load<MonsterData>("Data/SlimeData");
-        curHP = monsterData.maxHP;        
+        monsterData = GameManager.Resource.Load<MonsterData>("Data/Monsters/SlimeData");
+        CurHP = monsterData.maxHP;        
     }
 
     IEnumerator AttackRoutine()
@@ -92,7 +99,7 @@ public class Slime : Monster
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("TriggerEnter");
+        
         IHittable hittable = other.GetComponent<IHittable>();
         hittable?.TakeHit(monsterData.damage);
     }
