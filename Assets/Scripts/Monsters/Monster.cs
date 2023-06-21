@@ -12,6 +12,7 @@ public abstract class Monster : MonoBehaviour, IHittable
     protected Rigidbody rb;
 
     protected MonsterData monsterData;
+    protected Dictionary<IHittable, float> hitTable;
 
     private float curHP;
 
@@ -25,8 +26,10 @@ public abstract class Monster : MonoBehaviour, IHittable
         coll = GetComponent<Collider>();
         rend = GetComponent<MeshRenderer>();
         rb = GetComponent<Rigidbody>();
+
+        hitTable = new Dictionary<IHittable, float>();
     }
-    public virtual void TakeHit(float damage)
+    public virtual void TakeHit(float damage, GameObject attacker)
     {
         CurHP -= damage;
     }

@@ -9,10 +9,10 @@ public class Slime : Monster
 {
     [SerializeField] Collider attackCollider;
 
-    public enum State { Idle, Trace, Die, Size }
+    public enum State { Idle, Trace, Return, TakeHit, Die, Size }
     StateMachine<State, Slime> stateMachine;
     
-    private GameObject target;
+    [SerializeField] private GameObject target;
     private bool isAttacking = false;
 
     protected override void Awake()
@@ -25,6 +25,8 @@ public class Slime : Monster
         stateMachine = new StateMachine<State, Slime>(this);
         stateMachine.AddState(State.Idle, new IdleState(this, stateMachine));
         stateMachine.AddState(State.Trace, new TraceState(this, stateMachine));
+        
+        stateMachine.AddState(State.TakeHit, new TakeHitState(this, stateMachine));
         stateMachine.AddState(State.Die, new DieState(this, stateMachine));
     }
 
@@ -36,19 +38,26 @@ public class Slime : Monster
     {
         stateMachine.Update();
     }
-    public override void TakeHit(float damage)
+    public override void TakeHit(float damage, GameObject attacker)
     {
         CurHP -= damage;
-        animator.SetTrigger("gotHit");
-        if(CurHP < 0)
+        if(CurHP <= 0)
         {
             stateMachine.ChangeState(State.Die);
+        }
+        else
+        {
+            target = attacker;
+            stateMachine.ChangeState(State.TakeHit);
         }
     }
 
     public override void Die()
     {
-        base.Die();
+        StopAllCoroutines();
+        animator.SetTrigger("die");
+        //coll.enabled = false;
+        GameManager.Resource.Destroy(gameObject, 5f);
     }
 
     private void InitData()
@@ -57,10 +66,12 @@ public class Slime : Monster
         CurHP = monsterData.maxHP;        
     }
 
+    Coroutine attackRoutine;
     IEnumerator AttackRoutine()
     {
         isAttacking = true;
-        
+        hitTable.Clear();
+
         if (lookRoutine != null)
         {
             StopCoroutine(lookRoutine);
@@ -69,7 +80,7 @@ public class Slime : Monster
         if (Vector3.Distance(target.transform.position, transform.position) > monsterData.attackRange)
         {
             animator.SetTrigger("attack2");
-            rb.AddForce(Vector3.up * 10f + Vector3.forward * 8f, ForceMode.Impulse);
+            //rb.AddForce(Vector3.up * 10f + Vector3.forward * 8f, ForceMode.Impulse);
         }
         else
         {
@@ -99,9 +110,22 @@ public class Slime : Monster
 
     private void OnTriggerEnter(Collider other)
     {
-        
         IHittable hittable = other.GetComponent<IHittable>();
-        hittable?.TakeHit(monsterData.damage);
+        if (hittable != null)
+        {
+            if (hitTable.TryAdd(hittable, monsterData.damage))
+                hittable.TakeHit(monsterData.damage, gameObject);
+        }       
+    }
+    IEnumerator TakeHitRoutine()
+    {
+        float currentTime = 0;
+        animator.SetTrigger("gotHit");
+        while (currentTime < 0.6f)
+        {
+            yield return null;
+        }
+        stateMachine.ChangeState(State.Trace);
     }
 
     #region SlimeState
@@ -163,7 +187,7 @@ public class Slime : Monster
         {
 
             // 1. 범위
-            Collider[] targets = Physics.OverlapSphere(transform.position, range, targetMask);
+            Collider[] targets = Physics.OverlapSphere(transform.position + (Vector3.up * 1), range, targetMask);
             for (int i = 0; i < targets.Length; i++)
             {
                 Vector3 dirToTarget = (targets[i].transform.position - transform.position).normalized;
@@ -173,8 +197,8 @@ public class Slime : Monster
                     continue;
 
                 // 3. 중간 장애물
-                float distToTarget = Vector3.Distance(transform.position, targets[i].transform.position);
-                if (Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
+                float distToTarget = Vector3.Distance(transform.position + (Vector3.up * 1), targets[i].transform.position);
+                if (Physics.Raycast(transform.position + (Vector3.up * 1), dirToTarget, distToTarget, obstacleMask))
                     continue;
 
                 owner.target = targets[i].gameObject;
@@ -196,7 +220,7 @@ public class Slime : Monster
 
         public override void Exit()
         {
-            
+
         }
 
         public override void Setup()
@@ -208,10 +232,10 @@ public class Slime : Monster
         {
             if(Vector3.Distance(owner.target.transform.position, transform.position) > owner.monsterData.detectRange)
             {
+                owner.target = null;
                 stateMachine.ChangeState(State.Idle);
             }
         }
-
         
         public override void Update()
         {
@@ -219,12 +243,41 @@ public class Slime : Monster
             {             
                 return;
             }
-            if (owner.lookRoutine == null)
-                owner.lookRoutine = owner.StartCoroutine(owner.LookRoutine());
+            if (owner.lookRoutine != null)
+                owner.StopCoroutine(owner.lookRoutine);
+            owner.lookRoutine = owner.StartCoroutine(owner.LookRoutine());
             
             owner.StartCoroutine(owner.AttackRoutine());
         }
        
+    }
+
+    private class TakeHitState : SlimeState
+    {
+        public TakeHitState(Slime owner, StateMachine<State, Slime> stateMachine) : base(owner, stateMachine)
+        {
+        }
+
+        public override void Enter()
+        {
+            owner.StartCoroutine(owner.TakeHitRoutine());
+        }
+
+        public override void Exit()
+        {
+        }
+
+        public override void Setup()
+        {
+        }
+
+        public override void Transition()
+        {
+        }
+
+        public override void Update()
+        {
+        }
     }
     private class DieState : SlimeState
     {
@@ -233,7 +286,7 @@ public class Slime : Monster
         }
 
         public override void Enter() 
-        {
+        {            
             owner.Die();
         }
 

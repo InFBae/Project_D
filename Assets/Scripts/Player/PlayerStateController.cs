@@ -216,7 +216,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
     }
 
     private float hitDamage;
-    public void TakeHit(float damage)
+    public void TakeHit(float damage, GameObject attacker)
     {
         hitDamage = damage;
         if (CurState == State.Blocking)

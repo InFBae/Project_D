@@ -22,6 +22,7 @@ public class PlayerAttacker : MonoBehaviour
         hitTable = new Dictionary<IHittable, float>();
 
         curWeapon.hitTable = hitTable;
+        curWeapon.owner = gameObject;
     }
 
     private void Start()
