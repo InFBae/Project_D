@@ -2980,6 +2980,7 @@ GameObject:
   - component: {fileID: 4258858134412639606}
   - component: {fileID: 1240838026}
   - component: {fileID: 544831390}
+  - component: {fileID: 674111412}
   m_Layer: 3
   m_Name: Warrior
   m_TagString: Player
@@ -3072,6 +3073,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75149d540a55249498b6dfca22278e35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curWeapon: {fileID: 1388180401}
   continuousAttack: 0
 --- !u!114 &4258858134412639601
 MonoBehaviour:
@@ -3219,6 +3221,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curState: 0
+--- !u!114 &674111412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4258858134412639614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b4fd9cb2475d348b04a6c4c4c49bdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weakHitTime: 0.6
+  strongHitTime: 0.8
 --- !u!1001 &3316670892824619046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3228,7 +3244,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4211597657019845925, guid: 9ce523c69bd1d7442ae55724eb0ef186, type: 3}
       propertyPath: m_Name
-      value: 1HSword
+      value: OHSword
       objectReference: {fileID: 0}
     - target: {fileID: 4211597657019845925, guid: 9ce523c69bd1d7442ae55724eb0ef186, type: 3}
       propertyPath: m_Layer
@@ -3286,7 +3302,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 115.77
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -7063911570554637685, guid: 9ce523c69bd1d7442ae55724eb0ef186, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9ce523c69bd1d7442ae55724eb0ef186, type: 3}
 --- !u!1 &1474286056789075203 stripped
 GameObject:

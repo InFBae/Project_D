@@ -9,16 +9,19 @@ public class PlayerAttacker : MonoBehaviour
     private Animator animator;
     private PlayerStatusController statusController;
     private PlayerStateController stateController;
-    private PlayerStatusData statusData;
+    private Dictionary<IHittable, float> hitTable;
 
     [SerializeField] Weapon curWeapon;
      
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         statusController = GetComponent<PlayerStatusController>();
         stateController = GetComponent<PlayerStateController>();
-        statusData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerStatusData");
+        hitTable = new Dictionary<IHittable, float>();
+
+        curWeapon.hitTable = hitTable;
     }
 
     private void Start()
@@ -42,8 +45,12 @@ public class PlayerAttacker : MonoBehaviour
             {
                 animator.SetBool("IsAttacking", true);
                 animator.SetBool("ContinuousAttack", false);
-                curWeapon?.EnableCollider();
                 statusController.DecreaseSP(2);
+
+                // hitTable 초기화
+                hitTable.Clear();
+                curWeapon?.EnableCollider();
+                
                 // 공격 시간만큼 공격 실행
                 currentAttackTime = 0;
                 while (currentAttackTime < attackTime)

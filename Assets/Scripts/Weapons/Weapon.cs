@@ -7,6 +7,7 @@ public abstract class Weapon : MonoBehaviour
     protected WeaponData weaponData;
     protected string weaponName;
     protected Collider coll;
+    public Dictionary<IHittable, float> hitTable;
 
     protected virtual void Awake()
     {
@@ -14,6 +15,18 @@ public abstract class Weapon : MonoBehaviour
         coll = GetComponent<Collider>();
         if( coll != null )
             coll.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        IHittable hittable = other.GetComponent<IHittable>();
+        if (hittable != null)
+        {
+            if (hitTable.TryAdd(hittable, GetDamage()))
+            {
+                hittable.TakeHit(GetDamage());
+            }
+        }
     }
 
     public float GetDamage()

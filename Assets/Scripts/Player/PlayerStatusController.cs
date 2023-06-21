@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStatusController : MonoBehaviour, IHittable
+public class PlayerStatusController : MonoBehaviour
 {
     [SerializeField] private StatusInfoSceneUI statusInfoSceneUI;
     private PlayerStatusData statusData;
@@ -59,18 +59,8 @@ public class PlayerStatusController : MonoBehaviour, IHittable
 
         if(curHP <= 0)
         {
-            Die();
+            // TODO: GameOver;
         }
-    }
-
-    public void TakeHit(float damage)
-    {
-        DecreaseHP(damage);
-    }
-
-    public void Die()
-    {
-        // TODO : GameOver
     }
 
     #endregion

@@ -9,10 +9,4 @@ public class OHSword : Weapon
         weaponName = "OHSword";
         base.Awake();       
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        IHittable hittable = other.GetComponent<IHittable>();
-        hittable?.TakeHit(weaponData.damage);
-    }
 }

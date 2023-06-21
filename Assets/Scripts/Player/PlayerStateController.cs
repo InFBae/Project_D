@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerStateController : MonoBehaviour
+public class PlayerStateController : MonoBehaviour, IHittable
 {
-    public enum State { Idle, Walking, Running, Falling, Blocking, Attacking, LandRolling, Die, Size };
+    public enum State { Idle, Walking, Running, Falling, Blocking, Attacking, LandRolling, TakeHit, BlockHit, Die, Size };
     public State CurState { get { return curState; } set { curState = value; OnStateChanged?.Invoke(CurState); } }
     public Vector3 MoveDir { get { return moveDir; } }
 
@@ -18,6 +18,7 @@ public class PlayerStateController : MonoBehaviour
     private PlayerStatusController statusController;
     private PlayerMover mover;
     private PlayerAttacker attacker;
+    private PlayerHitter hitter;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class PlayerStateController : MonoBehaviour
         statusController = GetComponent<PlayerStatusController>();
         mover = GetComponent<PlayerMover>();
         attacker = GetComponent<PlayerAttacker>();
+        hitter = GetComponent<PlayerHitter>();
         
         CurState = State.Idle;
     }
@@ -79,6 +81,16 @@ public class PlayerStateController : MonoBehaviour
             if (attacker.attackRoutine != null)
                 attacker.StopCoroutine(attacker.attackRoutine);
             mover.StartCoroutine(mover.LandRollRoutine());           
+        }
+        else if (state == State.TakeHit || state == State.BlockHit)
+        {
+            if (mover.moveRoutine != null)
+                mover.StopCoroutine(mover.moveRoutine);
+            if (attacker.attackRoutine != null)
+                attacker.StopCoroutine(attacker.attackRoutine);
+            if (hitter.hitRoutine != null)
+                hitter.StopCoroutine(hitter.hitRoutine);
+            hitter.hitRoutine = hitter.StartCoroutine(hitter.HitRoutine(hitDamage));
         }
     }
 
@@ -201,5 +213,24 @@ public class PlayerStateController : MonoBehaviour
         {
             CurState = (State)this.IsMoving();
         }
+    }
+
+    private float hitDamage;
+    public void TakeHit(float damage)
+    {
+        hitDamage = damage;
+        if (CurState == State.Blocking)
+        {
+            CurState = State.BlockHit;
+        }
+        else
+        {
+            CurState = State.TakeHit;
+        }               
+    }
+
+    public void Die()
+    {
+        // TODO die
     }
 }
