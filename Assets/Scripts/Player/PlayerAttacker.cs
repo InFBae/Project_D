@@ -41,12 +41,12 @@ public class PlayerAttacker : MonoBehaviour
         {
             // 공격 중일 때
             if (stateController.CurState == PlayerStateController.State.Attacking &&
-                statusController.GetCurrentSP() >= 2 &&
+                statusController.GetCurrentSP() >= 1.5f &&
                 animator.GetBool("ContinuousAttack"))
             {
                 animator.SetBool("IsAttacking", true);
                 animator.SetBool("ContinuousAttack", false);
-                statusController.DecreaseSP(2);
+                statusController.DecreaseSP(1.5f);
 
                 // hitTable 초기화
                 hitTable.Clear();

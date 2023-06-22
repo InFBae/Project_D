@@ -14,12 +14,13 @@ public abstract class Monster : MonoBehaviour, IHittable
     protected MonsterData monsterData;
     protected Dictionary<IHittable, float> hitTable;
 
+    protected GameObject target;
     private float curHP;
 
     public UnityEvent<float> OnHPChanged;
     public float MaxHP { get { return monsterData.maxHP; } }
     public float CurHP { get { return curHP; } set { curHP = value; OnHPChanged?.Invoke(CurHP); } }
-    
+    public GameObject Target { get { return target; } }
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();

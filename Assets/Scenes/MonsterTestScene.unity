@@ -15412,7 +15412,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 312837857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.25, z: -26}
+  m_LocalPosition: {x: 0, y: 5.25, z: -28.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19907,6 +19907,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 312837858}
     m_Modifications:
+    - target: {fileID: 404688895, guid: 5420aa3e89e75014e85ac46916cbd152, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 312837858}
     - target: {fileID: 2036071421, guid: 5420aa3e89e75014e85ac46916cbd152, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -95205,10 +95209,6 @@ PrefabInstance:
     - target: {fileID: 4258858134412639614, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
       propertyPath: m_Name
       value: Warrior
-      objectReference: {fileID: 0}
-    - target: {fileID: 4434867017750572672, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}

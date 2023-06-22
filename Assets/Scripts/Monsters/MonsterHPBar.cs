@@ -23,5 +23,9 @@ public class MonsterHPBar : MonoBehaviour
     public void SetValue(float value)
     {
         slider.value = value;
+        if(value <= 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

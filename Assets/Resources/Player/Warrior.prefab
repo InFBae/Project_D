@@ -3335,6 +3335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc3d9f54b7c28524ab196157cf2eadaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
 --- !u!4 &1474286056789440803 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4211597657020207365, guid: 9ce523c69bd1d7442ae55724eb0ef186, type: 3}
@@ -3350,6 +3351,10 @@ PrefabInstance:
     - target: {fileID: 1069100504509342805, guid: a0a09842b6e75e44ca0f0bf2198e9837, type: 3}
       propertyPath: m_Name
       value: Shield
+      objectReference: {fileID: 0}
+    - target: {fileID: 1069100504509342805, guid: a0a09842b6e75e44ca0f0bf2198e9837, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1069100504509839477, guid: a0a09842b6e75e44ca0f0bf2198e9837, type: 3}
       propertyPath: m_RootOrder

@@ -12,8 +12,7 @@ public class Slime : Monster
     public enum State { Idle, Trace, Return, TakeHit, Die, Size }
     StateMachine<State, Slime> stateMachine;
     
-    [SerializeField] private GameObject target;
-    private bool isAttacking = false;
+    [SerializeField] private bool isAttacking = false;
 
     protected override void Awake()
     {
@@ -38,8 +37,12 @@ public class Slime : Monster
     {
         stateMachine.Update();
     }
+
     public override void TakeHit(float damage, GameObject attacker)
     {
+        
+        StopAllCoroutines();
+        isAttacking = false;
         CurHP -= damage;
         if(CurHP <= 0)
         {
@@ -56,7 +59,9 @@ public class Slime : Monster
     {
         StopAllCoroutines();
         animator.SetTrigger("die");
-        //coll.enabled = false;
+        rb.isKinematic = true;
+        coll.enabled = false;
+        
         GameManager.Resource.Destroy(gameObject, 5f);
     }
 
@@ -73,9 +78,7 @@ public class Slime : Monster
         hitTable.Clear();
 
         if (lookRoutine != null)
-        {
             StopCoroutine(lookRoutine);
-        }
 
         if (Vector3.Distance(target.transform.position, transform.position) > monsterData.attackRange)
         {
@@ -90,10 +93,12 @@ public class Slime : Monster
             yield return new WaitForSeconds(0.5f);
             attackCollider.gameObject.SetActive(false);
         }
+        if (lookRoutine != null)
+            StopCoroutine(lookRoutine);
+        lookRoutine = StartCoroutine(LookRoutine());
         yield return new WaitForSeconds(monsterData.attackCooltime);
         
-        lookRoutine = StartCoroutine(LookRoutine());
-        yield return new WaitForSeconds(1f);
+        
         isAttacking = false;        
     }
 
@@ -103,7 +108,7 @@ public class Slime : Monster
         while(target != null)
         {
             Quaternion lookRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, 3 * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, 5 * Time.deltaTime);
             yield return null;
         }
     }
@@ -117,14 +122,21 @@ public class Slime : Monster
                 hittable.TakeHit(monsterData.damage, gameObject);
         }       
     }
+
+    Coroutine takeHitRoutine;
     IEnumerator TakeHitRoutine()
     {
         float currentTime = 0;
         animator.SetTrigger("gotHit");
-        while (currentTime < 0.6f)
+        while (currentTime < 0.8f)
         {
+            currentTime += Time.deltaTime;
             yield return null;
         }
+        if (lookRoutine != null)
+            StopCoroutine(lookRoutine);
+        lookRoutine = StartCoroutine(LookRoutine());
+        yield return new WaitForSeconds(monsterData.attackCooltime);
         stateMachine.ChangeState(State.Trace);
     }
 
@@ -159,7 +171,6 @@ public class Slime : Monster
 
         public override void Exit()
         {
-            owner.animator.SetTrigger("idleBreak");
         }
 
         public override void Setup()
@@ -216,6 +227,9 @@ public class Slime : Monster
         public override void Enter()
         {
             owner.isAttacking = false;
+            if (owner.lookRoutine != null)
+                owner.StopCoroutine(owner.lookRoutine);
+            owner.lookRoutine = owner.StartCoroutine(owner.LookRoutine());
         }
 
         public override void Exit()
@@ -242,12 +256,8 @@ public class Slime : Monster
             if(owner.isAttacking)
             {             
                 return;
-            }
-            if (owner.lookRoutine != null)
-                owner.StopCoroutine(owner.lookRoutine);
-            owner.lookRoutine = owner.StartCoroutine(owner.LookRoutine());
-            
-            owner.StartCoroutine(owner.AttackRoutine());
+            }            
+            owner.attackRoutine = owner.StartCoroutine(owner.AttackRoutine());
         }
        
     }
@@ -260,7 +270,9 @@ public class Slime : Monster
 
         public override void Enter()
         {
-            owner.StartCoroutine(owner.TakeHitRoutine());
+            if (owner.takeHitRoutine != null)
+                owner.StopCoroutine(owner.takeHitRoutine);
+            owner.takeHitRoutine = owner.StartCoroutine(owner.TakeHitRoutine());
         }
 
         public override void Exit()
@@ -286,7 +298,7 @@ public class Slime : Monster
         }
 
         public override void Enter() 
-        {            
+        {
             owner.Die();
         }
 
