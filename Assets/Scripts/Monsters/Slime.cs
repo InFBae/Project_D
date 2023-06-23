@@ -62,7 +62,15 @@ public class Slime : Monster
         rb.isKinematic = true;
         coll.enabled = false;
         
-        GameManager.Resource.Destroy(gameObject, 5f);
+        GameManager.Pool.Release(gameObject, 5f);
+    }
+
+    public void Regen()
+    {
+        coll.enabled = true;
+        rb.isKinematic = false;
+        stateMachine.SetUp(State.Idle);
+        CurHP = MaxHP;
     }
 
     private void InitData()

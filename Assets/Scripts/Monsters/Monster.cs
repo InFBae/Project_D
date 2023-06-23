@@ -37,7 +37,7 @@ public abstract class Monster : MonoBehaviour, IHittable
 
     public virtual void Die()
     {
-        GameManager.Resource.Destroy(gameObject);
+        GameManager.Pool.Release(gameObject);
     }
 }
 

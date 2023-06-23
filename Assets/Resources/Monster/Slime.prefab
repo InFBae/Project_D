@@ -341,7 +341,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1238631122}
   - component: {fileID: 1238631123}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: AttackRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -887,6 +887,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   attackCollider: {fileID: 1238631123}
+  isAttacking: 0
 --- !u!64 &244870241
 MeshCollider:
   m_ObjectHideFlags: 0

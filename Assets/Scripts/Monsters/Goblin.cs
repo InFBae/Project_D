@@ -2,6 +2,7 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
 using static UnityEngine.UI.GridLayoutGroup;
 
@@ -14,12 +15,14 @@ public class Goblin : Monster
     private bool[] skillAvailability;
     private float[] skillCoolTime;
 
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] public Transform spawnPoint;
+    NavMeshAgent agent;
     private bool isAttacking = false;
 
     protected override void Awake()
     {
         base.Awake();
+        agent = GetComponent<NavMeshAgent>();
         InitData();
 
         attackCollider.enabled = false;
@@ -43,7 +46,17 @@ public class Goblin : Monster
     }
     public override void TakeHit(float damage, GameObject attacker)
     {
-        StopAllCoroutines();
+        if (moveRoutine != null)
+            StopCoroutine(moveRoutine);
+        if (lookRoutine != null)
+            StopCoroutine(lookRoutine);
+        if (attackRoutine != null)
+            StopCoroutine(attackRoutine);
+        if (takeHitRoutine != null)
+            StopCoroutine(takeHitRoutine);
+        if (returnRoutine != null)
+            StopCoroutine(returnRoutine);
+
         CurHP -= damage;
         attackCollider.enabled = false;
         isAttacking = false;
@@ -64,15 +77,25 @@ public class Goblin : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
-        GameManager.Resource.Destroy(gameObject, 5f);
+        GameManager.Pool.Release(gameObject, 5f);
     }
 
+    public void Regen()
+    {
+        rb.isKinematic = false;
+        coll.enabled = true;
+        stateMachine.SetUp(State.Idle);
+        for(int i = 0; i < skillAvailability.Length; i++)
+        {
+            skillAvailability[i] = true;
+        }
+        CurHP = MaxHP;
+    }
     private void InitData()
     {
         monsterData = GameManager.Resource.Load<MonsterData>("Data/Monsters/GoblinData");
         CurHP = monsterData.maxHP;
 
-        range = monsterData.detectRange;
         angle = Mathf.Cos(120f * 0.5f * Mathf.Deg2Rad);
         targetMask = (1 << LayerMask.NameToLayer("Player"));
         obstacleMask = (1 << LayerMask.NameToLayer("Environment"));
@@ -112,28 +135,28 @@ public class Goblin : Monster
             StopCoroutine(moveRoutine);
         animator.SetBool("move", false);
 
-        if (skillAvailability[0] && Vector3.Distance(target.transform.position, transform.position) >= skill1Range)
+        if (skillAvailability[0] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) >= skill1Range)
         {
             animator.SetTrigger("attack1");
             yield return new WaitForSeconds(1.6f);
             skillAvailability[0] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[0], 0));
         }
-        else if (skillAvailability[1])
+        else if (skillAvailability[1] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) < 3)
         {
             animator.SetTrigger("attack2");
             yield return new WaitForSeconds(2.66f);
             skillAvailability[1] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[1], 1));
         }
-        else if (skillAvailability[2])
+        else if (skillAvailability[2] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) < 3)
         {
             animator.SetTrigger("attack3");
             yield return new WaitForSeconds(2.2f);
             skillAvailability[2] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[2], 2));
         }
-        else if (skillAvailability[3])
+        else if (skillAvailability[3] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) < 3)
         {
             animator.SetTrigger("attack4");
             yield return new WaitForSeconds(2.8f);
@@ -143,7 +166,7 @@ public class Goblin : Monster
 
         attackCollider.enabled = false;
 
-        if (Vector3.Distance(target.transform.position, transform.position) > monsterData.attackRange)
+        if (Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) > monsterData.attackRange)
             stateMachine.ChangeState(State.Trace);
 
         if (lookRoutine != null)
@@ -160,13 +183,8 @@ public class Goblin : Monster
 
     IEnumerator TimerRoutine(float coolTime, int index)
     {
-        float currentTime = 0;
-
-        while (currentTime < coolTime)
-        {
-            currentTime += Time.deltaTime;
-            yield return null;
-        }
+        yield return new WaitForSeconds(coolTime);
+        
         skillAvailability[index] = true;
     }
 
@@ -208,13 +226,11 @@ public class Goblin : Monster
     Coroutine takeHitRoutine;
     IEnumerator TakeHitRoutine()
     {
-        float currentTime = 0;
+
         animator.SetTrigger("weakHit");
-        while (currentTime < 0.8f)
-        {
-            currentTime += Time.deltaTime;
-            yield return null;
-        }
+
+        yield return new WaitForSeconds(0.6f);
+
         if (lookRoutine != null)
             StopCoroutine(lookRoutine);
         lookRoutine = StartCoroutine(LookRoutine());
@@ -225,32 +241,35 @@ public class Goblin : Monster
     Coroutine returnRoutine;
     IEnumerator ReturnRoutine()
     {
+        agent.enabled = true;
+        agent.SetDestination(spawnPoint.position);       
         while (target == null)
         {
             transform.LookAt(spawnPoint);
-            rb.MovePosition(transform.position + transform.forward * monsterData.speed * Time.deltaTime);
+            //rb.MovePosition(transform.position + transform.forward * monsterData.speed * Time.deltaTime);
             FindTarget();
             if (Vector3.Distance(transform.position, spawnPoint.position) < 0.1f)
             {
                 animator.SetBool("move", false);
-                
+                agent.enabled = false;
+
                 transform.rotation = spawnPoint.rotation;
                 stateMachine.ChangeState(State.Idle);
                 yield break;
             }
             yield return null;
         }
+        agent.enabled = false;
         stateMachine.ChangeState(State.Trace);
     }
 
-    float range;
     float angle;
     LayerMask targetMask;
     LayerMask obstacleMask;
     public void FindTarget()
     {
         // 1. ¹üÀ§
-        Collider[] targets = Physics.OverlapSphere(transform.position + (Vector3.up * 1), range, targetMask);
+        Collider[] targets = Physics.OverlapSphere(transform.position + (Vector3.up * 1), monsterData.detectRange, targetMask);
         for (int i = 0; i < targets.Length; i++)
         {
             Vector3 dirToTarget = (targets[i].transform.position - transform.position).normalized;
@@ -291,8 +310,18 @@ public class Goblin : Monster
 
         public override void Enter()
         {
-            Debug.Log("IdleEnter");
             owner.target = null;
+            if (owner.moveRoutine != null)
+                owner.StopCoroutine(owner.moveRoutine);
+            if (owner.lookRoutine != null)
+                owner.StopCoroutine(owner.lookRoutine);
+            if (owner.attackRoutine != null)
+                owner.StopCoroutine(owner.attackRoutine);
+            if (owner.takeHitRoutine != null)
+                owner.StopCoroutine(owner.takeHitRoutine);
+            if (owner.returnRoutine != null)
+                owner.StopCoroutine(owner.returnRoutine);
+            owner.animator.SetBool("move", false);
         }
 
         public override void Exit()
@@ -326,7 +355,7 @@ public class Goblin : Monster
 
         public override void Enter()
         {
-            Debug.Log("TraceEnter");
+            //Debug.Log("EnterTrace");
             if (owner.lookRoutine != null)
                 owner.StopCoroutine(owner.lookRoutine);
             owner.lookRoutine = owner.StartCoroutine(owner.LookRoutine());
@@ -335,6 +364,7 @@ public class Goblin : Monster
 
         public override void Exit()
         {
+            //Debug.Log("ExitTrace");
             owner.animator.SetBool("move", false);
         }
 
@@ -344,15 +374,20 @@ public class Goblin : Monster
 
         public override void Transition()
         {
-            if (Vector3.Distance(owner.target.transform.position, transform.position) < owner.monsterData.attackRange)
+            if (Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) < owner.monsterData.attackRange)
             {                
                 stateMachine.ChangeState(State.Attack);
             }
-            if (Vector3.Distance(owner.target.transform.position, transform.position) > owner.monsterData.detectRange)
+            else if (Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange)
             {
                 owner.target = null;
                 stateMachine.ChangeState(State.Return);
-            }            
+            }
+            else if (Vector3.Distance(owner.spawnPoint.transform.position, transform.position) > owner.monsterData.detectRange * 2)
+            {
+                owner.target = null;
+                stateMachine.ChangeState(State.Return);
+            }
         }
 
         public override void Update()
@@ -370,7 +405,7 @@ public class Goblin : Monster
 
         public override void Enter()
         {
-            Debug.Log("attackEnter"); 
+            //Debug.Log("EnterAttack");
         }
 
         public override void Exit()
@@ -378,6 +413,8 @@ public class Goblin : Monster
             if(owner.attackRoutine != null) 
                 owner.StopCoroutine(owner.attackRoutine);
             owner.isAttacking = false;
+            if (owner.moveRoutine != null)
+                owner.StopCoroutine(owner.moveRoutine);
         }
 
         public override void Setup()
@@ -386,9 +423,14 @@ public class Goblin : Monster
 
         public override void Transition()
         {
-            if(!owner.isAttacking && Vector3.Distance(owner.target.transform.position, transform.position) > owner.monsterData.attackRange)
+            if(!owner.isAttacking && Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.attackRange)
             {
                 stateMachine.ChangeState(State.Trace);
+            }
+            if (!owner.isAttacking && Vector3.Distance(owner.spawnPoint.transform.position, transform.position) > owner.monsterData.detectRange * 2)
+            {
+                owner.target = null;
+                stateMachine.ChangeState(State.Return);
             }
         }
 
@@ -412,7 +454,7 @@ public class Goblin : Monster
 
         public override void Enter()
         {
-            Debug.Log("returnEnter");
+            //Debug.Log("EnterReturn");
             owner.animator.SetBool("move", true);
             if (owner.returnRoutine != null)
                 owner.StopCoroutine(owner.returnRoutine);
@@ -446,7 +488,8 @@ public class Goblin : Monster
 
         public override void Enter()
         {
-            Debug.Log("TakeHitEnter");
+            //Debug.Log("EnterTakeHit");
+            owner.animator.SetBool("move", false);
             if (owner.takeHitRoutine != null)
                 owner.StopCoroutine(owner.takeHitRoutine);
             owner.StartCoroutine(owner.TakeHitRoutine());
@@ -454,6 +497,7 @@ public class Goblin : Monster
 
         public override void Exit()
         {
+            //Debug.Log("ExitTakeHit");
         }
 
         public override void Setup()
@@ -476,6 +520,7 @@ public class Goblin : Monster
 
         public override void Enter()
         {
+            owner.animator.SetBool("move", false);
             owner.Die();
         }
 
