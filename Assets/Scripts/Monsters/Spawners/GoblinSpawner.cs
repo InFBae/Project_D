@@ -10,12 +10,8 @@ public class GoblinSpawner : MonsterSpawner
         monsterName = "Goblin";
         base.Awake();
 
-        Transform spawnPoint;
-
-        NavMeshHit hit;
-        NavMesh.SamplePosition(transform.position, out hit, 1.0f, 1);
-        Goblin goblin = GameManager.Pool.Get(monster, hit.position, Quaternion.identity) as Goblin;
-        //goblin.spawnPoint = hit.;
+        Goblin goblin = GameManager.Pool.Get(monster, transform.position, transform.rotation) as Goblin;
+        goblin.spawnPoint = transform;
 
         goblin.Regen();
         

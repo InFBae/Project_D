@@ -6789,7 +6789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraRoot: {fileID: 1177264637}
   lookPoint: {fileID: 1372940090}
-  mouseSensitivity: 90
+  mouseSensitivity: 45
 --- !u!114 &152027984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15573,7 +15573,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 312837857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: -28.47}
+  m_LocalPosition: {x: 0, y: 5.1, z: -28.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42201,7 +42201,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815407576}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.59, y: 6, z: -27.03}
+  m_LocalPosition: {x: 1.59, y: 5.1, z: -27.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44539,7 +44539,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 871476802}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.8, y: 6, z: -26.67}
+  m_LocalPosition: {x: -1.8, y: 5.1, z: -26.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

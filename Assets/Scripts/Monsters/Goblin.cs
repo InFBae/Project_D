@@ -16,13 +16,11 @@ public class Goblin : Monster
     private float[] skillCoolTime;
 
     [SerializeField] public Transform spawnPoint;
-    NavMeshAgent agent;
     private bool isAttacking = false;
 
     protected override void Awake()
     {
         base.Awake();
-        agent = GetComponent<NavMeshAgent>();
         InitData();
 
         attackCollider.enabled = false;
@@ -240,18 +238,15 @@ public class Goblin : Monster
 
     Coroutine returnRoutine;
     IEnumerator ReturnRoutine()
-    {
-        agent.enabled = true;
-        agent.SetDestination(spawnPoint.position);       
+    {     
         while (target == null)
         {
             transform.LookAt(spawnPoint);
-            //rb.MovePosition(transform.position + transform.forward * monsterData.speed * Time.deltaTime);
+            rb.MovePosition(transform.position + transform.forward * monsterData.speed * Time.deltaTime);
             FindTarget();
             if (Vector3.Distance(transform.position, spawnPoint.position) < 0.1f)
             {
                 animator.SetBool("move", false);
-                agent.enabled = false;
 
                 transform.rotation = spawnPoint.rotation;
                 stateMachine.ChangeState(State.Idle);
@@ -259,7 +254,6 @@ public class Goblin : Monster
             }
             yield return null;
         }
-        agent.enabled = false;
         stateMachine.ChangeState(State.Trace);
     }
 
