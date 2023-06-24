@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IHittable 
 {
-    public void TakeHit(float damage);
+    public void TakeHit(float damage, GameObject attacker);
 
     public void Die();
 }

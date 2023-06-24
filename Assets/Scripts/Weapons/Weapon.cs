@@ -9,6 +9,8 @@ public abstract class Weapon : MonoBehaviour
     protected Collider coll;
     public Dictionary<IHittable, float> hitTable;
 
+    public GameObject owner;
+
     protected virtual void Awake()
     {
         weaponData = GameManager.Resource.Load<WeaponData>($"Data/Weapons/{weaponName}");
@@ -24,7 +26,7 @@ public abstract class Weapon : MonoBehaviour
         {
             if (hitTable.TryAdd(hittable, GetDamage()))
             {
-                hittable.TakeHit(GetDamage());
+                hittable.TakeHit(GetDamage(), owner);
             }
         }
     }
