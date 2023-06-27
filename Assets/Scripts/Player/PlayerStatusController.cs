@@ -21,7 +21,6 @@ public class PlayerStatusController : MonoBehaviour
         curSP = maxSP;
         spRechargeTime = statusData.spRechargeTime;
         curDP = statusData.DP;
-
     }
 
     private void Update()

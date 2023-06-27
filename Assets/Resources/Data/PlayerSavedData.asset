@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b18c43b585cf9064aa37ce6e57162524, type: 3}
-  m_Name: PlayerStatusData
+  m_Name: PlayerSavedData
   m_EditorClassIdentifier: 
   maxHP: 10
   maxSP: 10
   spRechargeTime: 1.5
-  AP: 1
-  DP: 0
-  weapon: {fileID: 11400000, guid: e3d45445a4db97446aacda8b59472df8, type: 2}
-  health: 0
-  stamina: 0
-  vitality: 0
-  strength: 0
-  agility: 0
+  leftWeapon: {fileID: 11400000, guid: a830fef6e69350f458224811de667684, type: 2}
+  rightWeapon: {fileID: 11400000, guid: e3d45445a4db97446aacda8b59472df8, type: 2}
+  vitality: 1
+  endurance: 1
+  resistance: 1
+  strength: 1
+  dexerity: 1
+  curScene: 
+  curSpawnPoint: {fileID: 0}

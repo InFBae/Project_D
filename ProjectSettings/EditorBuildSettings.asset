@@ -4,5 +4,44 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/GameTitleScene.unity
+    guid: 135f6b5712fc6d84d895ab807d366f22
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Corridor_BossArea.unity
+    guid: 19babaa8b9ec1ce4abf67b0408ef73cd
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Corridor_Kitchen.unity
+    guid: b4e683707efe99b45b110fd81194ade0
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Corridor_Lab.unity
+    guid: bcde768643b8a844c9ab21f28ad39fa3
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Corridor_Royal.unity
+    guid: da70b37092a77a24b888ea52de197ebc
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_BossArea.unity
+    guid: 1a1c95851b6066145907d52cd4457ccf
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_Crypt.unity
+    guid: b2aa91ef07b09a24598e1125248d22d1
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_Kitchen.unity
+    guid: 76c1dbfc20104c64bb02d36aea035ff0
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_Lab.unity
+    guid: b519e259aec1d6a449395bff21296de2
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_Library.unity
+    guid: d395ce152eb5c9e4b84877c55c81e0cc
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_MainArea.unity
+    guid: 04486818cfd018940b7fb4e73e9d744b
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_Shrine.unity
+    guid: 9d7bc89cefcc05b4693e28f2cf32c032
+  - enabled: 1
+    path: Assets/Scenes/DungeonMaps/Room_Storage.unity
+    guid: 79e7b1707bc946c4588830b0a9793a85
   m_configObjects: {}

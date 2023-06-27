@@ -5,18 +5,21 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
+    private static DataManager dataManager;
     private static PoolManager poolManager;
     private static ResourceManager resourceManager;
     private static UIManager uiManager;
     private static SceneManager sceneManager;
 
     public static GameManager Instance { get { return instance; } }
+    public static DataManager Data { get { return dataManager; } }
     public static PoolManager Pool { get { return poolManager; } }
     public static ResourceManager Resource { get { return resourceManager; } }
     public static UIManager UI { get { return uiManager; } }
     public static SceneManager Scene { get { return sceneManager; } }
 
     private void Awake()
+
     {
         if (instance != null)
         {
@@ -56,5 +59,10 @@ public class GameManager : MonoBehaviour
         sceneObj.name = "SceneManager";
         sceneObj.transform.parent = transform;
         sceneManager = sceneObj.AddComponent<SceneManager>();
+
+        GameObject dataObj = new GameObject();
+        dataObj.name = "DataManager";
+        dataObj.transform.parent = transform;
+        dataManager = dataObj.AddComponent<DataManager>();
     }
 }

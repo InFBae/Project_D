@@ -33,7 +33,7 @@ public abstract class Weapon : MonoBehaviour
 
     public float GetDamage()
     {
-        return weaponData.damage;
+        return GameManager.Data.PlayerStatusData.AP;
     }
 
     public float GetAttackCoolTime()

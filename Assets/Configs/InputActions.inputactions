@@ -34,11 +34,11 @@
                 },
                 {
                     "name": "Run",
-                    "type": "PassThrough",
+                    "type": "Button",
                     "id": "5071536c-b20d-4f80-a912-fb3b53a951dd",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(pressPoint=1,behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -47,13 +47,31 @@
                     "id": "11d3d8ec-9235-4571-b9bc-5f174a0b1e42",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "initialStateCheck": false
                 },
                 {
                     "name": "Block",
                     "type": "PassThrough",
                     "id": "4c7c9703-2af3-43ee-af3b-79c5571c42b7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "6cae329d-4a4f-4bbc-aace-6e7cab31e90d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "StrongAttack",
+                    "type": "PassThrough",
+                    "id": "0a67af69-52cd-4e4f-9bbb-d6704a268203",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -130,7 +148,7 @@
                 {
                     "name": "",
                     "id": "4dbc500a-6081-4675-905b-91f83211ae20",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -168,6 +186,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "90957afa-1dab-414f-a20d-501bfcadda13",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "434649b9-97c7-44c2-ab33-342de28c0678",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StrongAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
