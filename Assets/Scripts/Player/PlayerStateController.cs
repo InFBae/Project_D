@@ -34,15 +34,17 @@ public class PlayerStateController : MonoBehaviour, IHittable
     {
         mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
         mover.fallRoutine = mover.StartCoroutine(mover.FallRoutine());
-        mover.lookRoutine = mover.StartCoroutine(mover.LookRoutine());
+        
     }
     private void OnEnable()
     {
+        mover.lookRoutine = mover.StartCoroutine(mover.LookRoutine());
         OnStateChanged += ChangeState;
     }
 
     private void OnDisable()
     {
+        StopCoroutine(mover.lookRoutine);
         OnStateChanged -= ChangeState; 
     }
 

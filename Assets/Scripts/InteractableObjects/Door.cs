@@ -14,7 +14,12 @@ public class Door : MonoBehaviour, IInteractable
         canvas.enabled = false;
     }
 
-    public void EnterDoor()
+    public void Interact()
+    {
+        GameManager.Scene.LoadScene(dest, start);
+    }
+
+    public void Enter()
     {
         if (canvas != null)
         {
@@ -22,16 +27,11 @@ public class Door : MonoBehaviour, IInteractable
         }
     }
 
-    public void ExitDoor()
+    public void Exit()
     {
         if (canvas != null)
         {
             canvas.enabled = false;
         }
     }
-    public void Interact()
-    {
-        GameManager.Scene.LoadScene(dest, start);
-    } 
-    
 }
