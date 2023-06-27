@@ -22,5 +22,11 @@ MonoBehaviour:
   resistance: 1
   strength: 1
   dexerity: 1
-  curScene: 
-  curSpawnPoint: {fileID: 0}
+  savedScene: 
+  savedSpawnPoint: {fileID: 0}
+  quickItemList:
+  - {fileID: 11400000, guid: a6c51361869758a439fbc9290b7fd0ad, type: 2}
+  - {fileID: 11400000, guid: d71f04b8a5816ed40aaf3e26b2c24749, type: 2}
+  quickItemIndex: 0
+  inventory: []
+  EXP: 10

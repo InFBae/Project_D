@@ -8,12 +8,16 @@ public class DataManager : MonoBehaviour
     private PlayerStatusData playerStatusData;
     private PlayerStatusData playerSavedData;
     private Transform playerTransform;
+    private int curEXP;
     public PlayerStatusData PlayerStatusData { get { return playerStatusData; } }
     public Transform PlayerTransform { 
         get { return playerTransform; } 
         set { playerTransform = value; }
     }
 
+    public int CurEXP { get { return curEXP; } set {  curEXP = value;  OnEXPChanged?.Invoke(curEXP); } }
+
+    public UnityAction<int> OnEXPChanged;
 
     private void Awake()
     {
@@ -39,6 +43,21 @@ public class DataManager : MonoBehaviour
     
         playerSavedData.savedScene = playerStatusData.savedScene;
         playerSavedData.savedSpawnPoint = playerStatusData.savedSpawnPoint;
+
+        playerSavedData.quickItemList.Clear();
+        foreach(ItemData data in playerStatusData.quickItemList)
+        {
+            playerSavedData.quickItemList.Add(data);
+        }
+        playerSavedData.quickItemIndex = playerStatusData.quickItemIndex;
+
+        playerSavedData.inventory.Clear();
+        foreach(ItemData data in playerStatusData.inventory)
+        {
+            playerSavedData.inventory.Add(data);
+        }
+
+        playerSavedData.EXP = curEXP;
     }
     private void LoadData()
     {
@@ -57,5 +76,21 @@ public class DataManager : MonoBehaviour
 
         playerStatusData.savedScene = playerSavedData.savedScene;
         playerStatusData.savedSpawnPoint = playerSavedData.savedSpawnPoint;
+
+        playerStatusData.quickItemList.Clear();
+        foreach (ItemData data in playerSavedData.quickItemList)
+        {
+            playerStatusData.quickItemList.Add(data);
+        }
+        playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
+
+        playerStatusData.inventory.Clear();
+        foreach (ItemData data in playerSavedData.inventory)
+        {
+            playerStatusData.inventory.Add(data);
+        }
+
+        playerStatusData.EXP = playerSavedData.EXP;
+        CurEXP = playerSavedData.EXP;
     }
 }

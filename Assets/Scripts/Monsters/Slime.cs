@@ -61,7 +61,8 @@ public class Slime : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
-        
+
+        GameManager.Data.CurEXP += 10;
         GameManager.Pool.Release(gameObject, 5f);
     }
 

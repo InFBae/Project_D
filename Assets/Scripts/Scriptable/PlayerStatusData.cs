@@ -47,4 +47,13 @@ public class PlayerStatusData : ScriptableObject
     // 현재 맵
     public string savedScene;      
     public Transform savedSpawnPoint;
+
+    // 퀵 아이템
+    public List<ItemData> quickItemList;
+    public int quickItemIndex;
+
+    // 인벤토리
+    public List<ItemData> inventory;
+
+    public int EXP;
 }

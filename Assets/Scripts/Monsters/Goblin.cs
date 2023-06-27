@@ -75,6 +75,8 @@ public class Goblin : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
+
+        GameManager.Data.CurEXP += 50;
         GameManager.Pool.Release(gameObject, 5f);
     }
 

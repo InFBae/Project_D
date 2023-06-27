@@ -13,4 +13,5 @@ public class WeaponData : ScriptableObject
     public float attackCooltime;
     public Transform offset;
     public WeaponType weaponType;
+    public Sprite sprite;
 }
