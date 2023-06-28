@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerStatusData", menuName = "Data/PlayerStatusData")]
-public class PlayerStatusData : ScriptableObject
+public class PlayerStatusData : ScriptableObject, ISerializationCallbackReceiver
 {
     public float maxHP;
     public float maxSP;
@@ -36,7 +36,11 @@ public class PlayerStatusData : ScriptableObject
     }
     public WeaponData leftWeapon;
     public WeaponData rightWeapon;
-    // ArmorData »óÀÇ ÇÏÀÇ Åõ±¸ Àå°© ºÎÃ÷
+
+    public ArmorData armorHead;
+    public ArmorData armorHand;
+    public ArmorData armorUpperBody;
+    public ArmorData armorLowerBody;    
     
     public int vitality;  // hp »ó½Â
     public int endurance; // sp »ó½Â
@@ -56,4 +60,17 @@ public class PlayerStatusData : ScriptableObject
     public List<ItemData> inventory;
 
     public int EXP;
+
+    public void OnBeforeSerialize()
+    {
+        if (inventory == null)
+        {
+            inventory = new List<ItemData>();
+        }
+    }
+
+    public void OnAfterDeserialize()
+    {
+        
+    }
 }
