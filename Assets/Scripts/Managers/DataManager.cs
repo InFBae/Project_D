@@ -8,12 +8,16 @@ public class DataManager : MonoBehaviour
     private PlayerStatusData playerStatusData;
     private PlayerStatusData playerSavedData;
     private Transform playerTransform;
+    private int curEXP;
+
     public PlayerStatusData PlayerStatusData { get { return playerStatusData; } }
     public Transform PlayerTransform { 
         get { return playerTransform; } 
         set { playerTransform = value; }
     }
+    public int CurEXP { get { return curEXP; } set {  curEXP = value;  OnEXPChanged?.Invoke(curEXP); } }
 
+    public UnityAction<int> OnEXPChanged;
 
     private void Awake()
     {
@@ -39,6 +43,32 @@ public class DataManager : MonoBehaviour
     
         playerSavedData.savedScene = playerStatusData.savedScene;
         playerSavedData.savedSpawnPoint = playerStatusData.savedSpawnPoint;
+
+        if (playerSavedData.quickItemList == null)
+            playerSavedData.quickItemList = new List<Item>();
+        if (playerStatusData.quickItemList != null)
+        {
+            playerSavedData.quickItemList.Clear();
+            foreach (Item item in playerStatusData.quickItemList)
+            {
+                playerSavedData.quickItemList.Add(item);
+            }
+            playerSavedData.quickItemIndex = playerStatusData.quickItemIndex;
+        }
+        
+        if (playerSavedData.inventory == null)
+            playerSavedData.inventory = new List<Item>();
+        if (playerStatusData.inventory != null)
+        {
+            playerSavedData.inventory.Clear();
+            foreach (Item item in playerStatusData.inventory)
+            {
+                playerSavedData.inventory.Add(item);
+            }
+        }
+        
+
+        playerSavedData.EXP = curEXP;
     }
     private void LoadData()
     {
@@ -57,5 +87,31 @@ public class DataManager : MonoBehaviour
 
         playerStatusData.savedScene = playerSavedData.savedScene;
         playerStatusData.savedSpawnPoint = playerSavedData.savedSpawnPoint;
+
+        if (playerStatusData.quickItemList == null)
+            playerStatusData.quickItemList = new List<Item>();
+        if (playerSavedData.quickItemList != null)
+        {
+            playerStatusData.quickItemList.Clear();
+            foreach (Item item in playerSavedData.quickItemList)
+            {
+                playerStatusData.quickItemList.Add(item);
+            }
+            playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
+        }
+
+        if (playerStatusData.inventory == null)
+            playerStatusData.inventory = new List<Item>();
+        if (playerSavedData.inventory != null)
+        {
+            playerStatusData.inventory.Clear();
+            foreach (Item item in playerSavedData.inventory)
+            {
+                playerStatusData.inventory.Add(item);
+            }
+        }      
+
+        playerStatusData.EXP = playerSavedData.EXP;
+        CurEXP = playerSavedData.EXP;
     }
 }

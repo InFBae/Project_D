@@ -17,10 +17,18 @@ MonoBehaviour:
   spRechargeTime: 1.5
   leftWeapon: {fileID: 11400000, guid: a830fef6e69350f458224811de667684, type: 2}
   rightWeapon: {fileID: 11400000, guid: e3d45445a4db97446aacda8b59472df8, type: 2}
+  armorHead: {fileID: 0}
+  armorHand: {fileID: 0}
+  armorUpperBody: {fileID: 0}
+  armorLowerBody: {fileID: 0}
   vitality: 1
   endurance: 1
   resistance: 1
   strength: 1
   dexerity: 1
-  curScene: 
-  curSpawnPoint: {fileID: 0}
+  savedScene: 
+  savedSpawnPoint: {fileID: 0}
+  quickItemList: []
+  quickItemIndex: 0
+  inventory: []
+  EXP: 0
