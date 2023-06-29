@@ -61,8 +61,20 @@ public class Slime : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
-        
+
+        DropItem();
+        GameManager.Data.CurEXP += 10;
         GameManager.Pool.Release(gameObject, 5f);
+    }
+
+    public override void DropItem()
+    {
+        GameObject redPotion = GameManager.Resource.Load<GameObject>("Item/RedPotion");
+        float dropRate = 100f;
+        if(Random.Range(0,10000) < dropRate * 100)
+        {
+            GameManager.Resource.Instantiate<GameObject>(redPotion, transform.position, transform.rotation);
+        }
     }
 
     public void Regen()

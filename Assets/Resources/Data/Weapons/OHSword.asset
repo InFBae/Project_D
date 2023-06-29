@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1aece7699d239439cce854357e6970, type: 3}
   m_Name: OHSword
   m_EditorClassIdentifier: 
+  itemName: OHSword
+  sprite: {fileID: 21300000, guid: b7f009356fbdfdf47a13761b6943dda7, type: 3}
+  instruction: Strength & Dexerity Weapon
   damage: 1
   attackCooltime: 0.7
   offset: {fileID: 4211597657020207365, guid: 9ce523c69bd1d7442ae55724eb0ef186, type: 3}

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerStateController : MonoBehaviour, IHittable
@@ -19,6 +20,8 @@ public class PlayerStateController : MonoBehaviour, IHittable
     private PlayerMover mover;
     private PlayerAttacker attacker;
     private PlayerHitter hitter;
+
+    private bool pointerOverUI = false;
 
     private void Awake()
     {
@@ -57,6 +60,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
         MoveDirCheck();
         GroundCheck();
         MovingCheck();
+        pointerOverUI = EventSystem.current.IsPointerOverGameObject();
     }
 
     private void ChangeState(State state)
@@ -189,6 +193,9 @@ public class PlayerStateController : MonoBehaviour, IHittable
     // Idle 이나 Walking 상태일 때와 이미 공격 중일 때 Attack
     private void OnAttack(InputValue inputValue)
     {
+        if (pointerOverUI)
+            return;
+
         // Idle 이나 Walking 또는 Attack 일 때 IsAttacking은 true
         if (CurState <= State.Walking)
         {

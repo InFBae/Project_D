@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Data/Weapon")]
-public class WeaponData : ScriptableObject
+public class WeaponData : ItemData
 {
     [Flags] public enum WeaponType { Strength, Agility}
 
@@ -13,4 +13,5 @@ public class WeaponData : ScriptableObject
     public float attackCooltime;
     public Transform offset;
     public WeaponType weaponType;
+    
 }
