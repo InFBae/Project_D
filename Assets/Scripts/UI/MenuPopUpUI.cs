@@ -10,6 +10,8 @@ public class MenuPopUpUI : PopUpUI
     [SerializeField] BaseUI inventoryUI;
     [SerializeField] BaseUI statsUI;
     [SerializeField] BaseUI settingUI;
+
+    PlayerInput input;
     protected override void Awake()
     {
         base.Awake();
@@ -20,6 +22,8 @@ public class MenuPopUpUI : PopUpUI
         buttons["SettingsButton"].onClick.AddListener(() => settingUI.transform.SetAsLastSibling());        
         buttons["ApplyButton"].onClick.AddListener(OnApplyButton);
         buttons["RevertButton"].onClick.AddListener(OnRevertButton);
+    
+        input = GetComponent<PlayerInput>();
     }
 
     private void OnEnable()

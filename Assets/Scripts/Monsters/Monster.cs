@@ -30,6 +30,10 @@ public abstract class Monster : MonoBehaviour, IHittable
 
         hitTable = new Dictionary<IHittable, float>();
     }
+    public virtual void DropItem()
+    {
+
+    }
     public virtual void TakeHit(float damage, GameObject attacker)
     {
         CurHP -= damage;

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InventoryUI : BaseUI
 {
-    List<ItemData> inventoryData;
+    List<Item> inventoryData;
     List<Image> inventoryImage;
     List<TMP_Text> inventoryCount;
 
@@ -59,8 +60,8 @@ public class InventoryUI : BaseUI
             {
                 inventoryImage[i].color = Color.white;
                 inventoryCount[i].enabled = true;
-                inventoryImage[i].sprite = inventoryData[inventoryIndex].sprite;
-                inventoryCount[i].text = inventoryData[inventoryIndex].count.ToString();
+                inventoryImage[i].sprite = inventoryData[inventoryIndex].Data.sprite;
+                inventoryCount[i].text = inventoryData[inventoryIndex].Count.ToString();
                 if (inventoryCount[i].text == "0")
                 {
                     inventoryCount[i].enabled = false;

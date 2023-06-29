@@ -99,12 +99,13 @@ public class EquipmentUI : BaseUI
         if (statusData.quickItemList.Count > 0)
         {
             images["QuickItemIcon"].color = Color.white;
-            images["QuickItemIcon"].sprite = statusData.quickItemList[statusData.quickItemIndex].sprite;
-            texts["QuickItemText"].text = statusData.quickItemList[statusData.quickItemIndex].instruction;
+            images["QuickItemIcon"].sprite = statusData.quickItemList[statusData.quickItemIndex].Data.sprite;
+            texts["QuickItemText"].text = statusData.quickItemList[statusData.quickItemIndex].Data.instruction;
         }
         else
         {
             images["QuickItemIcon"].color = Color.black;
+            images["QuickItemIcon"].sprite = null;
             texts["QuickItemText"].text = "None";
         }
 
@@ -112,8 +113,8 @@ public class EquipmentUI : BaseUI
         if (statusData.quickItemList.Count > 1)
         {
             images["NextItemIcon"].color = Color.white;
-            images["NextItemIcon"].sprite = statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].sprite;
-            texts["NextItemText"].text = statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].instruction;
+            images["NextItemIcon"].sprite = statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite;
+            texts["NextItemText"].text = statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.instruction;
         }
         else
         {

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78aaaa8544991eb4795c52799e9780fc, type: 3}
   m_Name: RedPotionData
   m_EditorClassIdentifier: 
+  itemName: RedPotion
   sprite: {fileID: 21300000, guid: 346ab28088aed114fa35f29bd2bdc4d1, type: 3}
-  count: 2
   instruction: Recovery HP 50%

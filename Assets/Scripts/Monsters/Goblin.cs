@@ -76,8 +76,19 @@ public class Goblin : Monster
         rb.isKinematic = true;
         coll.enabled = false;
 
+        DropItem();
         GameManager.Data.CurEXP += 50;
         GameManager.Pool.Release(gameObject, 5f);
+    }
+
+    public override void DropItem()
+    {
+        Item bluePotion = GameManager.Resource.Load<Item>("Item/BluePotion");
+        float dropRate = 100f;
+        if (Random.Range(0, 10000) < dropRate * 100)
+        {
+            GameManager.Resource.Instantiate<Item>(bluePotion, transform.position, transform.rotation);
+        }
     }
 
     public void Regen()

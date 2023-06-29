@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RedPotion : Item, IUsable
+public class BluePotion : Item
 {
     PlayerStatusController owner;
     private void Awake()
     {
-        data = GameManager.Resource.Load<ItemData>("Data/Items/RedPotionData");
+        data = GameManager.Resource.Load<ItemData>("Data/Items/BluePotionData");
     }
 
     public override void Collect()
@@ -24,19 +24,16 @@ public class RedPotion : Item, IUsable
                 }
             }
         }
-        GameObject redPotion = new GameObject();
-        redPotion.AddComponent<RedPotion>();
-        GameManager.Data.PlayerStatusData.inventory.Add(redPotion.GetComponent<RedPotion>());
+        GameManager.Data.PlayerStatusData.inventory.Add(this);
         GameManager.Resource.Destroy(this.gameObject);
-
     }
     public void Use()
     {
         if (count > 0)
         {
-            owner.IncreaseHP((GameManager.Data.PlayerStatusData.maxHP / 2));
+            owner.IncreaseHP(50);
             count--;
         }
-        
+
     }
 }

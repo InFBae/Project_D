@@ -39,15 +39,20 @@ public class StatusInfoSceneUI : SceneUI
         images["RightWeaponImage"].sprite = sprite;
     }
     public void SetQuickItem(Sprite sprite)
-    {
+    {      
+        if (sprite == null)
+            images["QuickItemImage"].color = Color.black;
+        else
+            images["QuickItemImage"].color = Color.white;
+
         images["QuickItemImage"].sprite = sprite;
     }
     public void SetNextItem(Sprite sprite)
     {
-        if (images["NextItemImage"] == null)
-            images["QuickItemImage"].color = Color.black;
+        if (sprite == null)
+            images["NextItemImage"].color = Color.black;
         else
-            images["QuickItemImage"].color = Color.white;
+            images["NextItemImage"].color = Color.white;
         images["NextItemImage"].sprite = sprite;
     }
     public void SetQuickItemCount(int count)
@@ -63,8 +68,7 @@ public class StatusInfoSceneUI : SceneUI
             texts["QuickItemCount"].enabled = false;
             texts["QuickItemCount"].text = count.ToString();
             images["QuickItemImage"].color = Color.black;
-        }
-        
+        }       
     }
 
     public void SetEXP(int count)

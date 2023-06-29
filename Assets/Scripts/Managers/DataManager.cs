@@ -9,12 +9,12 @@ public class DataManager : MonoBehaviour
     private PlayerStatusData playerSavedData;
     private Transform playerTransform;
     private int curEXP;
+
     public PlayerStatusData PlayerStatusData { get { return playerStatusData; } }
     public Transform PlayerTransform { 
         get { return playerTransform; } 
         set { playerTransform = value; }
     }
-
     public int CurEXP { get { return curEXP; } set {  curEXP = value;  OnEXPChanged?.Invoke(curEXP); } }
 
     public UnityAction<int> OnEXPChanged;
@@ -45,16 +45,16 @@ public class DataManager : MonoBehaviour
         playerSavedData.savedSpawnPoint = playerStatusData.savedSpawnPoint;
 
         playerSavedData.quickItemList.Clear();
-        foreach(ItemData data in playerStatusData.quickItemList)
+        foreach(Item item in playerStatusData.quickItemList)
         {
-            playerSavedData.quickItemList.Add(data);
+            playerSavedData.quickItemList.Add(item);
         }
         playerSavedData.quickItemIndex = playerStatusData.quickItemIndex;
 
         playerSavedData.inventory.Clear();
-        foreach(ItemData data in playerStatusData.inventory)
+        foreach(Item item in playerStatusData.inventory)
         {
-            playerSavedData.inventory.Add(data);
+            playerSavedData.inventory.Add(item);
         }
 
         playerSavedData.EXP = curEXP;
@@ -78,16 +78,16 @@ public class DataManager : MonoBehaviour
         playerStatusData.savedSpawnPoint = playerSavedData.savedSpawnPoint;
 
         playerStatusData.quickItemList.Clear();
-        foreach (ItemData data in playerSavedData.quickItemList)
+        foreach (Item item in playerSavedData.quickItemList)
         {
-            playerStatusData.quickItemList.Add(data);
+            playerStatusData.quickItemList.Add(item);
         }
         playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
 
         playerStatusData.inventory.Clear();
-        foreach (ItemData data in playerSavedData.inventory)
+        foreach (Item item in playerSavedData.inventory)
         {
-            playerStatusData.inventory.Add(data);
+            playerStatusData.inventory.Add(item);
         }
 
         playerStatusData.EXP = playerSavedData.EXP;

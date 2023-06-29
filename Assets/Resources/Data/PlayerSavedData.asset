@@ -28,11 +28,7 @@ MonoBehaviour:
   dexerity: 1
   savedScene: 
   savedSpawnPoint: {fileID: 0}
-  quickItemList:
-  - {fileID: 11400000, guid: a6c51361869758a439fbc9290b7fd0ad, type: 2}
-  - {fileID: 11400000, guid: d71f04b8a5816ed40aaf3e26b2c24749, type: 2}
+  quickItemList: []
   quickItemIndex: 0
-  inventory:
-  - {fileID: 11400000, guid: a6c51361869758a439fbc9290b7fd0ad, type: 2}
-  - {fileID: 11400000, guid: d71f04b8a5816ed40aaf3e26b2c24749, type: 2}
+  inventory: []
   EXP: 0

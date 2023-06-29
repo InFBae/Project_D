@@ -53,19 +53,24 @@ public class PlayerStatusData : ScriptableObject, ISerializationCallbackReceiver
     public Transform savedSpawnPoint;
 
     // 퀵 아이템
-    public List<ItemData> quickItemList;
+    public List<Item> quickItemList;
     public int quickItemIndex;
 
     // 인벤토리
-    public List<ItemData> inventory;
+    public List<Item> inventory;
 
     public int EXP;
 
     public void OnBeforeSerialize()
     {
+        if (quickItemList == null)
+        {
+            quickItemList = new List<Item>();
+            quickItemIndex = 0;
+        }
         if (inventory == null)
         {
-            inventory = new List<ItemData>();
+            inventory = new List<Item>();
         }
     }
 
