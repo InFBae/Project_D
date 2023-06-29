@@ -62,13 +62,13 @@ public class InventoryUI : BaseUI
                 inventoryCount[i].enabled = true;
                 inventoryImage[i].sprite = inventoryData[inventoryIndex].Data.sprite;
                 inventoryCount[i].text = inventoryData[inventoryIndex].Count.ToString();
-                if (inventoryCount[i].text == "0")
+                if (inventoryData[i].Data.isStackable)
                 {
-                    inventoryCount[i].enabled = false;
+                    inventoryCount[i].enabled = true;
                 }
                 else
                 {
-                    inventoryCount[i].enabled = true;
+                    inventoryCount[i].enabled = false;
                 }
             }
             else

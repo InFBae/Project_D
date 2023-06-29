@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 7378587055526525644}
   - component: {fileID: 7378587055525522658}
   - component: {fileID: 7387514374746072922}
-  - component: {fileID: -1007686538489997875}
   - component: {fileID: 2464991878551664132}
+  - component: {fileID: 6518153679798964810}
   m_Layer: 11
   m_Name: BluePotion
   m_TagString: Untagged
@@ -100,19 +100,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43752459945276722, guid: 28e96418b5a8497469e852ef59933318, type: 2}
---- !u!114 &-1007686538489997875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7378587055523452120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46fa68c3c16a9134a986fd0df9bad3a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  count: 1
 --- !u!54 &2464991878551664132
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -129,3 +116,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6518153679798964810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7378587055523452120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb736ee2caf9beb4ba21cb2632d03ede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: d71f04b8a5816ed40aaf3e26b2c24749, type: 2}
+  count: 1

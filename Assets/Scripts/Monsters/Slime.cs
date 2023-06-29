@@ -69,11 +69,11 @@ public class Slime : Monster
 
     public override void DropItem()
     {
-        Item redPotion = GameManager.Resource.Load<Item>("Item/RedPotion");
+        GameObject redPotion = GameManager.Resource.Load<GameObject>("Item/RedPotion");
         float dropRate = 100f;
         if(Random.Range(0,10000) < dropRate * 100)
         {
-            GameManager.Resource.Instantiate<Item>(redPotion, transform.position, transform.rotation);
+            GameManager.Resource.Instantiate<GameObject>(redPotion, transform.position, transform.rotation);
         }
     }
 

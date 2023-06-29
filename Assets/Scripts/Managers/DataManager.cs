@@ -44,18 +44,29 @@ public class DataManager : MonoBehaviour
         playerSavedData.savedScene = playerStatusData.savedScene;
         playerSavedData.savedSpawnPoint = playerStatusData.savedSpawnPoint;
 
-        playerSavedData.quickItemList.Clear();
-        foreach(Item item in playerStatusData.quickItemList)
+        if (playerSavedData.quickItemList == null)
+            playerSavedData.quickItemList = new List<Item>();
+        if (playerStatusData.quickItemList != null)
         {
-            playerSavedData.quickItemList.Add(item);
+            playerSavedData.quickItemList.Clear();
+            foreach (Item item in playerStatusData.quickItemList)
+            {
+                playerSavedData.quickItemList.Add(item);
+            }
+            playerSavedData.quickItemIndex = playerStatusData.quickItemIndex;
         }
-        playerSavedData.quickItemIndex = playerStatusData.quickItemIndex;
-
-        playerSavedData.inventory.Clear();
-        foreach(Item item in playerStatusData.inventory)
+        
+        if (playerSavedData.inventory == null)
+            playerSavedData.inventory = new List<Item>();
+        if (playerStatusData.inventory != null)
         {
-            playerSavedData.inventory.Add(item);
+            playerSavedData.inventory.Clear();
+            foreach (Item item in playerStatusData.inventory)
+            {
+                playerSavedData.inventory.Add(item);
+            }
         }
+        
 
         playerSavedData.EXP = curEXP;
     }
@@ -77,18 +88,28 @@ public class DataManager : MonoBehaviour
         playerStatusData.savedScene = playerSavedData.savedScene;
         playerStatusData.savedSpawnPoint = playerSavedData.savedSpawnPoint;
 
-        playerStatusData.quickItemList.Clear();
-        foreach (Item item in playerSavedData.quickItemList)
+        if (playerStatusData.quickItemList == null)
+            playerStatusData.quickItemList = new List<Item>();
+        if (playerSavedData.quickItemList != null)
         {
-            playerStatusData.quickItemList.Add(item);
+            playerStatusData.quickItemList.Clear();
+            foreach (Item item in playerSavedData.quickItemList)
+            {
+                playerStatusData.quickItemList.Add(item);
+            }
+            playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
         }
-        playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
 
-        playerStatusData.inventory.Clear();
-        foreach (Item item in playerSavedData.inventory)
+        if (playerStatusData.inventory == null)
+            playerStatusData.inventory = new List<Item>();
+        if (playerSavedData.inventory != null)
         {
-            playerStatusData.inventory.Add(item);
-        }
+            playerStatusData.inventory.Clear();
+            foreach (Item item in playerSavedData.inventory)
+            {
+                playerStatusData.inventory.Add(item);
+            }
+        }      
 
         playerStatusData.EXP = playerSavedData.EXP;
         CurEXP = playerSavedData.EXP;

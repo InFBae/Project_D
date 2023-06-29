@@ -9,4 +9,5 @@ public class ItemData : ScriptableObject
     public string itemName;
     public Sprite sprite;
     public string instruction;
+    public bool isStackable;
 }

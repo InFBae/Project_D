@@ -83,11 +83,11 @@ public class Goblin : Monster
 
     public override void DropItem()
     {
-        Item bluePotion = GameManager.Resource.Load<Item>("Item/BluePotion");
+        GameObject bluePotion = GameManager.Resource.Load<GameObject>("Item/BluePotion");
         float dropRate = 100f;
         if (Random.Range(0, 10000) < dropRate * 100)
         {
-            GameManager.Resource.Instantiate<Item>(bluePotion, transform.position, transform.rotation);
+            GameManager.Resource.Instantiate<GameObject>(bluePotion, transform.position, transform.rotation);
         }
     }
 
