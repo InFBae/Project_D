@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerItemCollector : MonoBehaviour
 {
     PlayerStatusController playerStatusController;
+    CollectedItemSceneUI collectedItemSceneUI;
 
     private void Awake()
     {
         playerStatusController = GetComponentInParent<PlayerStatusController>();
+        collectedItemSceneUI = GetComponentInChildren<CollectedItemSceneUI>();
     }
     private void OnTriggerEnter(Collider other)
     {

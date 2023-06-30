@@ -143,4 +143,13 @@ public class UIManager : MonoBehaviour
             GameManager.Pool.ReleaseUI(inGameUI.gameObject);
         }
     }
+
+    public void FloatMessage(Item item, int count)
+    {
+        CollectedItemSceneUI collectedItemSceneUI = GameManager.Resource.Instantiate<CollectedItemSceneUI>("UI/CollectedItemUI", true);
+        //collectedItemSceneUI.transform.SetParent(windowCanvas.transform);
+        collectedItemSceneUI.SetUI(item);
+        GameManager.Resource.Destroy(collectedItemSceneUI.gameObject, 3f);
+    }
+
 }
