@@ -70,9 +70,9 @@ public class StatusInfoSceneUI : SceneUI
             images["QuickItemImage"].color = Color.black;
         }       
     }
-
     public void SetEXP(int count)
     {
         texts["EXPCount"].text = count.ToString();
     }
+
 }
