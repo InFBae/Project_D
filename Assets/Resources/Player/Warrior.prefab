@@ -68,7 +68,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1492099637}
   - component: {fileID: 1492099638}
-  m_Layer: 3
+  - component: {fileID: 1965661447}
+  m_Layer: 10
   m_Name: PlayerInteractor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,6 +104,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1965661447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492099636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcec4abbee118144a8924ee86f5e8ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &331538227617822646
 GameObject:
   m_ObjectHideFlags: 0
@@ -3084,6 +3097,7 @@ GameObject:
   - component: {fileID: 1240838026}
   - component: {fileID: 544831390}
   - component: {fileID: 674111412}
+  - component: {fileID: 1965661448}
   m_Layer: 3
   m_Name: Warrior
   m_TagString: Player
@@ -3341,6 +3355,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weakHitTime: 0.6
   strongHitTime: 0.8
+--- !u!114 &1965661448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4258858134412639614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed9f26f638de2bc49b6cf6f7597c9f21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1252914096
 PrefabInstance:
   m_ObjectHideFlags: 0
