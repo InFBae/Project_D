@@ -2817,7 +2817,7 @@ GameObject:
   - component: {fileID: 8353581788256184023}
   - component: {fileID: 8353581788256184022}
   m_Layer: 5
-  m_Name: ResistanceUpButton
+  m_Name: StrengthUpButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3450,6 +3450,7 @@ GameObject:
   - component: {fileID: 8353581788499049700}
   - component: {fileID: 8353581788499049499}
   - component: {fileID: 8353581788499049498}
+  - component: {fileID: 4711600403085876167}
   m_Layer: 5
   m_Name: LevelUpPopUpUI
   m_TagString: Untagged
@@ -3541,6 +3542,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4711600403085876167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353581788499049497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eae8bc3076d4774ca562ae5e742ad90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8353581788562999205
 GameObject:
   m_ObjectHideFlags: 0
@@ -3675,7 +3688,7 @@ GameObject:
   - component: {fileID: 8353581788593599964}
   - component: {fileID: 8353581788593599955}
   m_Layer: 5
-  m_Name: ResistanceDownButton
+  m_Name: StrengthDownButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4279,7 +4292,7 @@ GameObject:
   - component: {fileID: 8353581789460420746}
   - component: {fileID: 8353581789460420745}
   m_Layer: 5
-  m_Name: ResistanceUpgradeCostText
+  m_Name: StrengthUpgradeCostText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

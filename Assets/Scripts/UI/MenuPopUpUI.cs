@@ -6,12 +6,14 @@ using UnityEngine.InputSystem;
 
 public class MenuPopUpUI : PopUpUI
 {
+    private static bool isOpened = false;
+    public static bool IsOpened { get { return isOpened; } }
+
     [SerializeField] BaseUI equipmentUI;
     [SerializeField] BaseUI inventoryUI;
     [SerializeField] BaseUI statsUI;
     [SerializeField] BaseUI settingUI;
 
-    PlayerInput input;
     protected override void Awake()
     {
         base.Awake();
@@ -22,28 +24,26 @@ public class MenuPopUpUI : PopUpUI
         buttons["SettingsButton"].onClick.AddListener(() => settingUI.transform.SetAsLastSibling());        
         buttons["ApplyButton"].onClick.AddListener(OnApplyButton);
         buttons["RevertButton"].onClick.AddListener(OnRevertButton);
-    
-        input = GetComponent<PlayerInput>();
     }
 
     private void OnEnable()
     {
+        isOpened = true;
         Cursor.lockState = CursorLockMode.None;
     }
     private void OnDisable()
     {
+        isOpened = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void OnApplyButton()
-    {
-        UIController.OnMenuPopUpUIClosed?.Invoke();
+    {      
         CloseUI();
     }
     
     public void OnRevertButton()
     {
-        UIController.OnMenuPopUpUIClosed?.Invoke();
         CloseUI();
     }
 

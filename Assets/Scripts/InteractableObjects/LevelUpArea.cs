@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelUpArea : MonoBehaviour, IInteractable
 {
@@ -26,16 +27,10 @@ public class LevelUpArea : MonoBehaviour, IInteractable
             canvas.enabled = false;
         }
     }
-
     public void Interact()
     {
-        Debug.Log("LevelUpInteract");
-        /*MenuPopUpUI menuPopUpUI = GameManager.Resource.Load<MenuPopUpUI>("UI/MenuUI");
+        if (!LevelUpPopUpUI.IsOpened)
+            GameManager.UI.ShowPopUpUI<LevelUpPopUpUI>("UI/LevelUpPopUpUI");
 
-        if (isMenuUIClosed)
-        {
-            isMenuUIClosed = false;
-            GameManager.UI.ShowPopUpUI(menuPopUpUI);
-        }*/
     }
 }

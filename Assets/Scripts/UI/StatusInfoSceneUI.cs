@@ -8,6 +8,7 @@ public class StatusInfoSceneUI : SceneUI
     protected override void Awake()
     {
         base.Awake();
+        SetEXP(GameManager.Data.CurEXP);
     }
 
     private void OnEnable()

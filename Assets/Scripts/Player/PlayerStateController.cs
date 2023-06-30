@@ -21,11 +21,12 @@ public class PlayerStateController : MonoBehaviour, IHittable
     private PlayerAttacker attacker;
     private PlayerHitter hitter;
 
-    private bool pointerOverUI = false;
+    private PlayerInput playerInput;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        playerInput = GetComponent<PlayerInput>();
         statusController = GetComponent<PlayerStatusController>();
         mover = GetComponent<PlayerMover>();
         attacker = GetComponent<PlayerAttacker>();
@@ -56,7 +57,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
         MoveDirCheck();
         GroundCheck();
         MovingCheck();
-        pointerOverUI = EventSystem.current.IsPointerOverGameObject();
+        CheckOnUI();
     }
 
     private void ChangeState(State state)
@@ -189,9 +190,6 @@ public class PlayerStateController : MonoBehaviour, IHittable
     // Idle 이나 Walking 상태일 때와 이미 공격 중일 때 Attack
     private void OnAttack(InputValue inputValue)
     {
-        if (pointerOverUI)
-            return;
-
         // Idle 이나 Walking 또는 Attack 일 때 IsAttacking은 true
         if (CurState <= State.Walking)
         {
@@ -241,5 +239,17 @@ public class PlayerStateController : MonoBehaviour, IHittable
     public void Die()
     {
         // TODO die
+    }
+
+    public void CheckOnUI()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            playerInput.enabled = false;
+        }
+        else
+        {
+            playerInput.enabled = true;
+        }
     }
 }
