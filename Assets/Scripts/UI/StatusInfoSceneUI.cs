@@ -8,6 +8,7 @@ public class StatusInfoSceneUI : SceneUI
     protected override void Awake()
     {
         base.Awake();
+        SetEXP(GameManager.Data.CurEXP);
     }
 
     private void OnEnable()
@@ -70,9 +71,9 @@ public class StatusInfoSceneUI : SceneUI
             images["QuickItemImage"].color = Color.black;
         }       
     }
-
     public void SetEXP(int count)
     {
         texts["EXPCount"].text = count.ToString();
     }
+
 }

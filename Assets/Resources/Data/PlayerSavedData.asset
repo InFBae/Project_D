@@ -28,7 +28,5 @@ MonoBehaviour:
   dexerity: 1
   savedScene: 
   savedSpawnPoint: {fileID: 0}
-  quickItemList: []
   quickItemIndex: 0
-  inventory: []
-  EXP: 0
+  EXP: 50000
