@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -90,6 +92,36 @@ public class PoolManager : MonoBehaviour
                 return false;
 
             poolDic[key].Release(component.gameObject);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool Release<T>(T instance, float delay)
+    {
+        if (instance is GameObject)
+        {
+            GameObject go = instance as GameObject;
+            string key = go.name;
+
+            if (!poolDic.ContainsKey(key))
+                return false;
+
+            StartCoroutine(DelayReleaseRoutine(go, delay));
+            return true;
+        }
+        else if (instance is Component)
+        {
+            Component component = instance as Component;
+            string key = component.gameObject.name;
+
+            if (!poolDic.ContainsKey(key))
+                return false;
+
+            StartCoroutine(DelayReleaseRoutine(component.gameObject, delay));
             return true;
         }
         else
@@ -275,5 +307,10 @@ public class PoolManager : MonoBehaviour
             }
             );
         poolDic.Add(key, pool);
+    }
+    IEnumerator DelayReleaseRoutine(GameObject go, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameManager.Pool.Release(go);
     }
 }

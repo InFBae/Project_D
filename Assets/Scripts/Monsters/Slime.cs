@@ -9,11 +9,10 @@ public class Slime : Monster
 {
     [SerializeField] Collider attackCollider;
 
-    public enum State { Idle, Trace, Die, Size }
+    public enum State { Idle, Trace, Return, TakeHit, Die, Size }
     StateMachine<State, Slime> stateMachine;
     
-    private GameObject target;
-    private bool isAttacking = false;
+    [SerializeField] private bool isAttacking = false;
 
     protected override void Awake()
     {
@@ -25,6 +24,8 @@ public class Slime : Monster
         stateMachine = new StateMachine<State, Slime>(this);
         stateMachine.AddState(State.Idle, new IdleState(this, stateMachine));
         stateMachine.AddState(State.Trace, new TraceState(this, stateMachine));
+        
+        stateMachine.AddState(State.TakeHit, new TakeHitState(this, stateMachine));
         stateMachine.AddState(State.Die, new DieState(this, stateMachine));
     }
 
@@ -36,19 +37,52 @@ public class Slime : Monster
     {
         stateMachine.Update();
     }
-    public override void TakeHit(float damage)
+
+    public override void TakeHit(float damage, GameObject attacker)
     {
+        
+        StopAllCoroutines();
+        isAttacking = false;
         CurHP -= damage;
-        animator.SetTrigger("gotHit");
-        if(CurHP < 0)
+        if(CurHP <= 0)
         {
             stateMachine.ChangeState(State.Die);
+        }
+        else
+        {
+            target = attacker;
+            stateMachine.ChangeState(State.TakeHit);
         }
     }
 
     public override void Die()
     {
-        base.Die();
+        StopAllCoroutines();
+        animator.SetTrigger("die");
+        rb.isKinematic = true;
+        coll.enabled = false;
+
+        DropItem();
+        GameManager.Data.CurEXP += 10;
+        GameManager.Pool.Release(gameObject, 5f);
+    }
+
+    public override void DropItem()
+    {
+        GameObject redPotion = GameManager.Resource.Load<GameObject>("Item/RedPotion");
+        float dropRate = 100f;
+        if(Random.Range(0,10000) < dropRate * 100)
+        {
+            GameManager.Resource.Instantiate<GameObject>(redPotion, transform.position, transform.rotation);
+        }
+    }
+
+    public void Regen()
+    {
+        coll.enabled = true;
+        rb.isKinematic = false;
+        stateMachine.SetUp(State.Idle);
+        CurHP = MaxHP;
     }
 
     private void InitData()
@@ -57,19 +91,19 @@ public class Slime : Monster
         CurHP = monsterData.maxHP;        
     }
 
+    Coroutine attackRoutine;
     IEnumerator AttackRoutine()
     {
         isAttacking = true;
-        
+        hitTable.Clear();
+
         if (lookRoutine != null)
-        {
             StopCoroutine(lookRoutine);
-        }
 
         if (Vector3.Distance(target.transform.position, transform.position) > monsterData.attackRange)
         {
             animator.SetTrigger("attack2");
-            rb.AddForce(Vector3.up * 10f + Vector3.forward * 8f, ForceMode.Impulse);
+            //rb.AddForce(Vector3.up * 10f + Vector3.forward * 8f, ForceMode.Impulse);
         }
         else
         {
@@ -79,10 +113,12 @@ public class Slime : Monster
             yield return new WaitForSeconds(0.5f);
             attackCollider.gameObject.SetActive(false);
         }
+        if (lookRoutine != null)
+            StopCoroutine(lookRoutine);
+        lookRoutine = StartCoroutine(LookRoutine());
         yield return new WaitForSeconds(monsterData.attackCooltime);
         
-        lookRoutine = StartCoroutine(LookRoutine());
-        yield return new WaitForSeconds(1f);
+        
         isAttacking = false;        
     }
 
@@ -92,16 +128,36 @@ public class Slime : Monster
         while(target != null)
         {
             Quaternion lookRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, 3 * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, 5 * Time.deltaTime);
             yield return null;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        
         IHittable hittable = other.GetComponent<IHittable>();
-        hittable?.TakeHit(monsterData.damage);
+        if (hittable != null)
+        {
+            if (hitTable.TryAdd(hittable, monsterData.damage))
+                hittable.TakeHit(monsterData.damage, gameObject);
+        }       
+    }
+
+    Coroutine takeHitRoutine;
+    IEnumerator TakeHitRoutine()
+    {
+        float currentTime = 0;
+        animator.SetTrigger("gotHit");
+        while (currentTime < 0.8f)
+        {
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+        if (lookRoutine != null)
+            StopCoroutine(lookRoutine);
+        lookRoutine = StartCoroutine(LookRoutine());
+        yield return new WaitForSeconds(monsterData.attackCooltime);
+        stateMachine.ChangeState(State.Trace);
     }
 
     #region SlimeState
@@ -135,7 +191,6 @@ public class Slime : Monster
 
         public override void Exit()
         {
-            owner.animator.SetTrigger("idleBreak");
         }
 
         public override void Setup()
@@ -163,7 +218,7 @@ public class Slime : Monster
         {
 
             // 1. 범위
-            Collider[] targets = Physics.OverlapSphere(transform.position, range, targetMask);
+            Collider[] targets = Physics.OverlapSphere(transform.position + (Vector3.up * 1), range, targetMask);
             for (int i = 0; i < targets.Length; i++)
             {
                 Vector3 dirToTarget = (targets[i].transform.position - transform.position).normalized;
@@ -173,8 +228,8 @@ public class Slime : Monster
                     continue;
 
                 // 3. 중간 장애물
-                float distToTarget = Vector3.Distance(transform.position, targets[i].transform.position);
-                if (Physics.Raycast(transform.position, dirToTarget, distToTarget, obstacleMask))
+                float distToTarget = Vector3.Distance(transform.position + (Vector3.up * 1), targets[i].transform.position);
+                if (Physics.Raycast(transform.position + (Vector3.up * 1), dirToTarget, distToTarget, obstacleMask))
                     continue;
 
                 owner.target = targets[i].gameObject;
@@ -192,11 +247,14 @@ public class Slime : Monster
         public override void Enter()
         {
             owner.isAttacking = false;
+            if (owner.lookRoutine != null)
+                owner.StopCoroutine(owner.lookRoutine);
+            owner.lookRoutine = owner.StartCoroutine(owner.LookRoutine());
         }
 
         public override void Exit()
         {
-            
+
         }
 
         public override void Setup()
@@ -208,23 +266,50 @@ public class Slime : Monster
         {
             if(Vector3.Distance(owner.target.transform.position, transform.position) > owner.monsterData.detectRange)
             {
+                owner.target = null;
                 stateMachine.ChangeState(State.Idle);
             }
         }
-
         
         public override void Update()
         {
             if(owner.isAttacking)
             {             
                 return;
-            }
-            if (owner.lookRoutine == null)
-                owner.lookRoutine = owner.StartCoroutine(owner.LookRoutine());
-            
-            owner.StartCoroutine(owner.AttackRoutine());
+            }            
+            owner.attackRoutine = owner.StartCoroutine(owner.AttackRoutine());
         }
        
+    }
+
+    private class TakeHitState : SlimeState
+    {
+        public TakeHitState(Slime owner, StateMachine<State, Slime> stateMachine) : base(owner, stateMachine)
+        {
+        }
+
+        public override void Enter()
+        {
+            if (owner.takeHitRoutine != null)
+                owner.StopCoroutine(owner.takeHitRoutine);
+            owner.takeHitRoutine = owner.StartCoroutine(owner.TakeHitRoutine());
+        }
+
+        public override void Exit()
+        {
+        }
+
+        public override void Setup()
+        {
+        }
+
+        public override void Transition()
+        {
+        }
+
+        public override void Update()
+        {
+        }
     }
     private class DieState : SlimeState
     {

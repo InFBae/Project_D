@@ -6,10 +6,15 @@ using UnityEngine.Events;
 public abstract class BaseScene : MonoBehaviour
 {
     public float progress { get ; protected set; }
-    protected abstract IEnumerator LoadingRoutine();
+    protected abstract IEnumerator LoadingRoutine(string exScene);
 
     public void LoadAsync()
     {
-        StartCoroutine(LoadingRoutine());
+        StartCoroutine(LoadingRoutine(null));
+    }
+
+    public void LoadAsync(string exScene)
+    {
+        StartCoroutine(LoadingRoutine(exScene));
     }
 }

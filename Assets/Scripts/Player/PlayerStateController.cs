@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerStateController : MonoBehaviour, IHittable
@@ -20,9 +21,12 @@ public class PlayerStateController : MonoBehaviour, IHittable
     private PlayerAttacker attacker;
     private PlayerHitter hitter;
 
+    private PlayerInput playerInput;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        playerInput = GetComponent<PlayerInput>();
         statusController = GetComponent<PlayerStatusController>();
         mover = GetComponent<PlayerMover>();
         attacker = GetComponent<PlayerAttacker>();
@@ -34,15 +38,21 @@ public class PlayerStateController : MonoBehaviour, IHittable
     {
         mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
         mover.fallRoutine = mover.StartCoroutine(mover.FallRoutine());
-        mover.lookRoutine = mover.StartCoroutine(mover.LookRoutine());
+        
     }
     private void OnEnable()
     {
+        mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
+        mover.fallRoutine = mover.StartCoroutine(mover.FallRoutine());
+        mover.lookRoutine = mover.StartCoroutine(mover.LookRoutine());
         OnStateChanged += ChangeState;
     }
 
     private void OnDisable()
     {
+        mover.StopCoroutine(mover.moveRoutine);
+        mover.StopCoroutine(mover.fallRoutine);
+        mover.StopCoroutine(mover.lookRoutine);
         OnStateChanged -= ChangeState; 
     }
 
@@ -51,6 +61,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
         MoveDirCheck();
         GroundCheck();
         MovingCheck();
+        CheckOnUI();
     }
 
     private void ChangeState(State state)
@@ -216,7 +227,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
     }
 
     private float hitDamage;
-    public void TakeHit(float damage)
+    public void TakeHit(float damage, GameObject attacker)
     {
         hitDamage = damage;
         if (CurState == State.Blocking)
@@ -232,5 +243,17 @@ public class PlayerStateController : MonoBehaviour, IHittable
     public void Die()
     {
         // TODO die
+    }
+
+    public void CheckOnUI()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            playerInput.enabled = false;
+        }
+        else
+        {
+            playerInput.enabled = true;
+        }
     }
 }

@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerStatusController : MonoBehaviour
 {
     [SerializeField] private StatusInfoSceneUI statusInfoSceneUI;
     private PlayerStatusData statusData;
+
     private const int HP = 0, SP = 1, DP = 2;
 
     private void Awake()
@@ -22,6 +24,26 @@ public class PlayerStatusController : MonoBehaviour
         spRechargeTime = statusData.spRechargeTime;
         curDP = statusData.DP;
 
+        statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.sprite);
+        statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.sprite);
+        if(statusData.quickItemList.Count > 0)
+        {
+            statusInfoSceneUI.SetQuickItem(statusData.quickItemList[statusData.quickItemIndex].Data.sprite);
+            statusInfoSceneUI.SetQuickItemCount(statusData.quickItemList[statusData.quickItemIndex].Count);
+        }
+        else
+        {
+            statusInfoSceneUI.SetQuickItem(null);
+            statusInfoSceneUI.SetQuickItemCount(0);
+        }
+        if(statusData.quickItemList.Count > 1)
+        {
+            statusInfoSceneUI.SetNextItem(statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite);
+        }
+        else
+        {
+            statusInfoSceneUI.SetNextItem(null);
+        }
     }
 
     private void Update()
@@ -144,5 +166,27 @@ public class PlayerStatusController : MonoBehaviour
     }
 
     #endregion
+
+    private void OnChangeItem(InputValue input)
+    {
+        if (statusData.quickItemList.Count < 1)
+            return;
+        if(input.Get<float>() > 0.5)
+        {
+            statusData.quickItemIndex = (statusData.quickItemIndex + 1) % statusData.quickItemList.Count;            
+        }
+        else if(input.Get<float>() < -0.5)
+        {
+            statusData.quickItemIndex = statusData.quickItemIndex - 1 < 0 ? statusData.quickItemList.Count - 1 : statusData.quickItemIndex - 1;            
+        }
+
+        statusInfoSceneUI.SetQuickItem(statusData.quickItemList[statusData.quickItemIndex].Data.sprite);
+        statusInfoSceneUI.SetQuickItemCount(statusData.quickItemList[statusData.quickItemIndex].Count);
+
+        if (statusData.quickItemList.Count > 1)
+        {
+            statusInfoSceneUI.SetNextItem(statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite);
+        }
+    }
 
 }
