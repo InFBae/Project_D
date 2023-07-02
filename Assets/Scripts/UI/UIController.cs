@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour
 {
     private void OnMenu(InputValue input)
     {
-        if (!MenuPopUpUI.IsOpened)
+        if (!MenuPopUpUI.IsOpened && GameManager.Data.PlayerState == PlayerStateController.State.Idle)
         {
             GameManager.UI.ShowPopUpUI<MenuPopUpUI>("UI/MenuUI");
         }       

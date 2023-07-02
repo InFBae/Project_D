@@ -29,17 +29,17 @@ public class PlayerHitter : MonoBehaviour
     public Coroutine hitRoutine;
     private float currentTime;
     private float hitTime;
-    public IEnumerator HitRoutine(float damage)
+    public IEnumerator HitRoutine(float damage, IHittable.HitType hitType)
     {
         animator.SetLayerWeight(1, 0);
         rig.weight = 0;
        
-        animator.SetFloat("TakeHitDamage", damage);
+        animator.SetInteger("TakeHitType", (int)hitType);
 
         currentTime = 0;
         statusController.DecreaseHP(1);
 
-        if (animator.GetFloat("TakeHitDamage") >= 2)
+        if (hitType == IHittable.HitType.Strong)
         {
             hitTime = strongHitTime;
         }

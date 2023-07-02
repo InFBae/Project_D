@@ -14,7 +14,7 @@ public abstract class Monster : MonoBehaviour, IHittable
     protected MonsterData monsterData;
     protected Dictionary<IHittable, float> hitTable;
 
-    protected GameObject target;
+    [SerializeField] protected GameObject target;
     private float curHP;
 
     public UnityEvent<float> OnHPChanged;
@@ -34,7 +34,7 @@ public abstract class Monster : MonoBehaviour, IHittable
     {
 
     }
-    public virtual void TakeHit(float damage, GameObject attacker)
+    public virtual void TakeHit(float damage, GameObject attacker, IHittable.HitType hitType)
     {
         CurHP -= damage;
     }

@@ -42,7 +42,7 @@ public class Goblin : Monster
     {
         stateMachine.Update();
     }
-    public override void TakeHit(float damage, GameObject attacker)
+    public override void TakeHit(float damage, GameObject attacker, IHittable.HitType hitType)
     {
         if (moveRoutine != null)
             StopCoroutine(moveRoutine);
@@ -230,7 +230,7 @@ public class Goblin : Monster
         if (hittable != null)
         {
             if (hitTable.TryAdd(hittable, monsterData.damage))
-                hittable.TakeHit(monsterData.damage, gameObject);
+                hittable.TakeHit(monsterData.damage, gameObject, IHittable.HitType.Weak);
         }
     }
 
@@ -385,7 +385,7 @@ public class Goblin : Monster
             {                
                 stateMachine.ChangeState(State.Attack);
             }
-            else if (Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange)
+            else if (Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange + 1)
             {
                 owner.target = null;
                 stateMachine.ChangeState(State.Return);
@@ -434,7 +434,7 @@ public class Goblin : Monster
             {
                 stateMachine.ChangeState(State.Trace);
             }
-            if (!owner.isAttacking && Vector3.Distance(owner.spawnPoint.transform.position, transform.position) > owner.monsterData.detectRange * 2)
+            if (!owner.isAttacking && Vector3.Distance(owner.spawnPoint.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange * 2)
             {
                 owner.target = null;
                 stateMachine.ChangeState(State.Return);
