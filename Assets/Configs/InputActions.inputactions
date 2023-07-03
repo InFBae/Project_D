@@ -69,7 +69,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "StrongAttack",
+                    "name": "StrongKey",
                     "type": "PassThrough",
                     "id": "0a67af69-52cd-4e4f-9bbb-d6704a268203",
                     "expectedControlType": "Button",
@@ -225,7 +225,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "StrongAttack",
+                    "action": "StrongKey",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

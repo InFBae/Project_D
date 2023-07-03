@@ -7,11 +7,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerStateController : MonoBehaviour, IHittable
 {
-    public enum State { Idle, Walking, Running, Falling, Blocking, Attacking, LandRolling, TakeHit, BlockHit, Die, Size };
+    public enum State { Idle, Walking, Running, Falling, Blocking, Attacking, LandRolling, TakeHit, BlockHit, Die, StrongAttack, Size };
     public State CurState { get { return curState; } set { curState = value; OnStateChanged?.Invoke(CurState); } }
     public Vector3 MoveDir { get { return moveDir; } }
 
     public UnityAction<State> OnStateChanged;
+    public IHittable.HitType attackType;
 
     [SerializeField] private State curState;
     private Vector3 moveDir;
@@ -42,18 +43,16 @@ public class PlayerStateController : MonoBehaviour, IHittable
     }
     private void OnEnable()
     {
-        mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
-        mover.fallRoutine = mover.StartCoroutine(mover.FallRoutine());
-        mover.lookRoutine = mover.StartCoroutine(mover.LookRoutine());
+        mover.StartRoutines();
         OnStateChanged += ChangeState;
+        OnStateChanged += SetPlayerState;
     }
 
     private void OnDisable()
     {
-        mover.StopCoroutine(mover.moveRoutine);
-        mover.StopCoroutine(mover.fallRoutine);
-        mover.StopCoroutine(mover.lookRoutine);
-        OnStateChanged -= ChangeState; 
+        mover.StopRoutines();
+        OnStateChanged -= ChangeState;
+        OnStateChanged -= SetPlayerState;
     }
 
     private void Update()
@@ -62,6 +61,12 @@ public class PlayerStateController : MonoBehaviour, IHittable
         GroundCheck();
         MovingCheck();
         CheckOnUI();
+        
+    }
+
+    private void SetPlayerState(State state)
+    {
+        GameManager.Data.PlayerState = state;
     }
 
     private void ChangeState(State state)
@@ -77,11 +82,20 @@ public class PlayerStateController : MonoBehaviour, IHittable
         }
         else if (state == State.Blocking || state == State.Attacking)
         {
+            attackType = IHittable.HitType.Weak;
             if (mover.moveRoutine != null)
                 mover.StopCoroutine(mover.moveRoutine);
             mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
             animator.SetLayerWeight(1, 1);
             attacker.attackRoutine = attacker.StartCoroutine(attacker.AttackRoutine());
+        }
+        else if (state == State.StrongAttack)
+        {
+            attackType = IHittable.HitType.Strong;
+            if (mover.moveRoutine != null)
+                mover.StopCoroutine(mover.moveRoutine);
+            attacker.StartCoroutine(attacker.StrongAttackRoutine());
+            
         }
         else if (state == State.LandRolling)
         {
@@ -101,7 +115,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
                 attacker.StopCoroutine(attacker.attackRoutine);
             if (hitter.hitRoutine != null)
                 hitter.StopCoroutine(hitter.hitRoutine);
-            hitter.hitRoutine = hitter.StartCoroutine(hitter.HitRoutine(hitDamage));
+            hitter.hitRoutine = hitter.StartCoroutine(hitter.HitRoutine(hitDamage, hitType));
         }
     }
 
@@ -168,7 +182,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
     {
         RaycastHit hit;
 
-        if (!Physics.SphereCast(transform.position + Vector3.up * 1f, 0.5f, Vector3.down, out hit, 0.8f))
+        if (!Physics.SphereCast(transform.position + Vector3.up * 1f, 0.5f, Vector3.down, out hit, 0.9f))
             CurState = State.Falling;
         else
         {
@@ -191,10 +205,15 @@ public class PlayerStateController : MonoBehaviour, IHittable
         }
     }
 
-    // Idle 이나 Walking 상태일 때와 이미 공격 중일 때 Attack
     private void OnAttack(InputValue inputValue)
     {
-        // Idle 이나 Walking 또는 Attack 일 때 IsAttacking은 true
+        if (statusController.GetCurrentSP() < 1.5f) return;
+        if (animator.GetBool("StrongKey") && statusController.GetCurrentSP() >= 3f)
+        {
+            if (animator.GetBool("IsAttacking"))
+                return;
+            CurState = State.StrongAttack;
+        }
         if (CurState <= State.Walking)
         {
             animator.SetBool("ContinuousAttack", true);
@@ -226,10 +245,24 @@ public class PlayerStateController : MonoBehaviour, IHittable
         }
     }
 
-    private float hitDamage;
-    public void TakeHit(float damage, GameObject attacker)
+    private void OnStrongKey(InputValue input)
     {
+        if (input.isPressed)
+        {
+            animator.SetBool("StrongKey", true);
+        }
+        else
+            animator.SetBool("StrongKey", false);
+    }
+
+    private float hitDamage;
+    private IHittable.HitType hitType;
+    public void TakeHit(float damage, GameObject attacker, IHittable.HitType hitType)
+    {
+        if (CurState == State.LandRolling) return;
+
         hitDamage = damage;
+        this.hitType = hitType;
         if (CurState == State.Blocking)
         {
             CurState = State.BlockHit;
@@ -242,7 +275,8 @@ public class PlayerStateController : MonoBehaviour, IHittable
 
     public void Die()
     {
-        // TODO die
+        playerInput.enabled = false;
+
     }
 
     public void CheckOnUI()
