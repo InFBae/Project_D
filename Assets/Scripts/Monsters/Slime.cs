@@ -38,7 +38,7 @@ public class Slime : Monster
         stateMachine.Update();
     }
 
-    public override void TakeHit(float damage, GameObject attacker)
+    public override void TakeHit(float damage, GameObject attacker, IHittable.HitType hitType)
     {
         
         StopAllCoroutines();
@@ -61,8 +61,20 @@ public class Slime : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
-        
+
+        DropItem();
+        GameManager.Data.CurEXP += 10;
         GameManager.Pool.Release(gameObject, 5f);
+    }
+
+    public override void DropItem()
+    {
+        GameObject redPotion = GameManager.Resource.Load<GameObject>("Item/RedPotion");
+        float dropRate = 100f;
+        if(Random.Range(0,10000) < dropRate * 100)
+        {
+            GameManager.Resource.Instantiate<GameObject>(redPotion, transform.position, transform.rotation);
+        }
     }
 
     public void Regen()
@@ -96,10 +108,11 @@ public class Slime : Monster
         else
         {
             animator.SetTrigger("attack1");
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.1f);
             attackCollider.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
             attackCollider.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.4f);
         }
         if (lookRoutine != null)
             StopCoroutine(lookRoutine);
@@ -116,7 +129,7 @@ public class Slime : Monster
         while(target != null)
         {
             Quaternion lookRotation = Quaternion.LookRotation(target.transform.position - transform.position);
-            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, 5 * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, 10 * Time.deltaTime);
             yield return null;
         }
     }
@@ -127,20 +140,17 @@ public class Slime : Monster
         if (hittable != null)
         {
             if (hitTable.TryAdd(hittable, monsterData.damage))
-                hittable.TakeHit(monsterData.damage, gameObject);
+                hittable.TakeHit(monsterData.damage, gameObject, IHittable.HitType.Weak);
         }       
     }
 
     Coroutine takeHitRoutine;
     IEnumerator TakeHitRoutine()
     {
-        float currentTime = 0;
         animator.SetTrigger("gotHit");
-        while (currentTime < 0.8f)
-        {
-            currentTime += Time.deltaTime;
-            yield return null;
-        }
+
+        yield return new WaitForSeconds(0.8f);
+        
         if (lookRoutine != null)
             StopCoroutine(lookRoutine);
         lookRoutine = StartCoroutine(LookRoutine());
@@ -252,7 +262,7 @@ public class Slime : Monster
 
         public override void Transition()
         {
-            if(Vector3.Distance(owner.target.transform.position, transform.position) > owner.monsterData.detectRange)
+            if(Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange + 1)
             {
                 owner.target = null;
                 stateMachine.ChangeState(State.Idle);

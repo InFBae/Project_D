@@ -18,6 +18,9 @@ public class Goblin : Monster
     [SerializeField] public Transform spawnPoint;
     private bool isAttacking = false;
 
+    IHittable.HitType hitType;
+    IHittable.HitType attackType;
+
     protected override void Awake()
     {
         base.Awake();
@@ -42,7 +45,7 @@ public class Goblin : Monster
     {
         stateMachine.Update();
     }
-    public override void TakeHit(float damage, GameObject attacker)
+    public override void TakeHit(float damage, GameObject attacker, IHittable.HitType hitType)
     {
         if (moveRoutine != null)
             StopCoroutine(moveRoutine);
@@ -56,6 +59,7 @@ public class Goblin : Monster
             StopCoroutine(returnRoutine);
 
         CurHP -= damage;
+        this.hitType = hitType;
         attackCollider.enabled = false;
         isAttacking = false;
         if (CurHP <= 0)
@@ -75,7 +79,20 @@ public class Goblin : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
+
+        DropItem();
+        GameManager.Data.CurEXP += 50;
         GameManager.Pool.Release(gameObject, 5f);
+    }
+
+    public override void DropItem()
+    {
+        GameObject bluePotion = GameManager.Resource.Load<GameObject>("Item/BluePotion");
+        float dropRate = 100f;
+        if (Random.Range(0, 10000) < dropRate * 100)
+        {
+            GameManager.Resource.Instantiate<GameObject>(bluePotion, transform.position, transform.rotation);
+        }
     }
 
     public void Regen()
@@ -135,6 +152,7 @@ public class Goblin : Monster
 
         if (skillAvailability[0] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) >= skill1Range)
         {
+            attackType = IHittable.HitType.Weak;
             animator.SetTrigger("attack1");
             yield return new WaitForSeconds(1.6f);
             skillAvailability[0] = false;
@@ -142,6 +160,7 @@ public class Goblin : Monster
         }
         else if (skillAvailability[1] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) < 3)
         {
+            attackType = IHittable.HitType.Weak;
             animator.SetTrigger("attack2");
             yield return new WaitForSeconds(2.66f);
             skillAvailability[1] = false;
@@ -149,6 +168,7 @@ public class Goblin : Monster
         }
         else if (skillAvailability[2] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) < 3)
         {
+            attackType = IHittable.HitType.Weak;
             animator.SetTrigger("attack3");
             yield return new WaitForSeconds(2.2f);
             skillAvailability[2] = false;
@@ -156,7 +176,8 @@ public class Goblin : Monster
         }
         else if (skillAvailability[3] && Vector3.Distance(target.transform.position, transform.position + (Vector3.up * 1)) < 3)
         {
-            animator.SetTrigger("attack4");
+            attackType = IHittable.HitType.Strong;
+            animator.SetTrigger("attack4");        
             yield return new WaitForSeconds(2.8f);
             skillAvailability[3] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[3], 3));
@@ -217,17 +238,31 @@ public class Goblin : Monster
         if (hittable != null)
         {
             if (hitTable.TryAdd(hittable, monsterData.damage))
-                hittable.TakeHit(monsterData.damage, gameObject);
+            {
+                float damage = monsterData.damage;
+                if(attackType == IHittable.HitType.Strong)
+                {
+                    damage *= 2;
+                }
+                hittable.TakeHit(damage, gameObject, attackType);
+            }
+                
         }
     }
 
     Coroutine takeHitRoutine;
     IEnumerator TakeHitRoutine()
     {
-
-        animator.SetTrigger("weakHit");
-
-        yield return new WaitForSeconds(0.6f);
+        if(hitType == IHittable.HitType.Weak)
+        {
+            animator.SetTrigger("weakHit");
+            yield return new WaitForSeconds(0.6f);
+        }
+        else
+        {
+            animator.SetTrigger("heavyHitFront");
+            yield return new WaitForSeconds(0.8f);
+        }
 
         if (lookRoutine != null)
             StopCoroutine(lookRoutine);
@@ -372,7 +407,7 @@ public class Goblin : Monster
             {                
                 stateMachine.ChangeState(State.Attack);
             }
-            else if (Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange)
+            else if (Vector3.Distance(owner.target.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange + 1)
             {
                 owner.target = null;
                 stateMachine.ChangeState(State.Return);
@@ -421,7 +456,7 @@ public class Goblin : Monster
             {
                 stateMachine.ChangeState(State.Trace);
             }
-            if (!owner.isAttacking && Vector3.Distance(owner.spawnPoint.transform.position, transform.position) > owner.monsterData.detectRange * 2)
+            if (!owner.isAttacking && Vector3.Distance(owner.spawnPoint.transform.position, transform.position + (Vector3.up * 1)) > owner.monsterData.detectRange * 2)
             {
                 owner.target = null;
                 stateMachine.ChangeState(State.Return);

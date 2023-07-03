@@ -15,6 +15,6 @@ MonoBehaviour:
   maxHP: 5
   damage: 1
   speed: 2
-  attackCooltime: 2.5
+  attackCooltime: 1.2
   detectRange: 10
   attackRange: 3

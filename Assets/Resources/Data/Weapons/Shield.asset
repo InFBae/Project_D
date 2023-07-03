@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1aece7699d239439cce854357e6970, type: 3}
   m_Name: Shield
   m_EditorClassIdentifier: 
+  itemName: Shield
+  sprite: {fileID: 21300000, guid: e1f405656602a114fbd2a62b6d12b41a, type: 3}
+  instruction: Shield
   damage: 0
   attackCooltime: 0
   offset: {fileID: 1069100504509839477, guid: a0a09842b6e75e44ca0f0bf2198e9837, type: 3}
+  weaponType: 0

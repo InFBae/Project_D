@@ -15,5 +15,21 @@ MonoBehaviour:
   maxHP: 10
   maxSP: 10
   spRechargeTime: 1.5
-  DP: 0
-  weapon: {fileID: -7063911570554637685, guid: 9ce523c69bd1d7442ae55724eb0ef186, type: 3}
+  leftWeapon: {fileID: 11400000, guid: a830fef6e69350f458224811de667684, type: 2}
+  rightWeapon: {fileID: 11400000, guid: e3d45445a4db97446aacda8b59472df8, type: 2}
+  armorHead: {fileID: 0}
+  armorHand: {fileID: 0}
+  armorUpperBody: {fileID: 0}
+  armorLowerBody: {fileID: 0}
+  vitality: 1
+  endurance: 1
+  resistance: 1
+  strength: 1
+  dexerity: 1
+  savedScene: 
+  savedSpawnPoint: {fileID: 0}
+  quickItemList: []
+  quickItemIndex: 0
+  inventory:
+  - {fileID: 0}
+  EXP: 0
