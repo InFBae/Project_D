@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GoblinData
   m_EditorClassIdentifier: 
   maxHP: 10
-  damage: 2
-  speed: 8
+  damage: 20
+  speed: 5
   attackCooltime: 0.8
   detectRange: 7
   attackRange: 5

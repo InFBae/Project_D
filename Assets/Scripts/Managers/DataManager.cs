@@ -43,7 +43,7 @@ public class DataManager : MonoBehaviour
         playerSavedData.dexerity = playerStatusData.dexerity;        
     
         playerSavedData.savedScene = playerStatusData.savedScene;
-        playerSavedData.savedSpawnPoint = playerStatusData.savedSpawnPoint;
+        playerSavedData.savedSpawnPointIndex = playerStatusData.savedSpawnPointIndex;
 
         if (playerSavedData.quickItemList == null)
             playerSavedData.quickItemList = new List<Item>();
@@ -68,10 +68,9 @@ public class DataManager : MonoBehaviour
             }
         }
         
-
-        playerSavedData.EXP = curEXP;
+        playerSavedData.EXP = CurEXP;
     }
-    private void LoadData()
+    public void LoadData()
     {
         playerStatusData.maxHP = playerSavedData.maxHP;
         playerStatusData.maxSP = playerSavedData.maxSP;
@@ -87,7 +86,7 @@ public class DataManager : MonoBehaviour
         playerStatusData.dexerity = playerSavedData.dexerity;
 
         playerStatusData.savedScene = playerSavedData.savedScene;
-        playerStatusData.savedSpawnPoint = playerSavedData.savedSpawnPoint;
+        playerStatusData.savedSpawnPointIndex = playerSavedData.savedSpawnPointIndex;
 
         if (playerStatusData.quickItemList == null)
             playerStatusData.quickItemList = new List<Item>();
@@ -114,5 +113,29 @@ public class DataManager : MonoBehaviour
 
         playerStatusData.EXP = playerSavedData.EXP;
         CurEXP = playerSavedData.EXP;
+    }
+
+    public void ClearData()
+    {
+        playerSavedData.maxHP = 100;
+        playerSavedData.maxSP = 100;
+        playerSavedData.spRechargeTime = 1.5f;
+
+        playerSavedData.leftWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/Shield");
+        playerSavedData.rightWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/OHSword");
+
+        playerSavedData.vitality = 1;
+        playerSavedData.endurance = 1;
+        playerSavedData.resistance = 1;
+        playerSavedData.strength = 1;
+        playerSavedData.dexerity = 1;
+
+        playerSavedData.savedScene = null;
+        playerSavedData.savedSpawnPointIndex = 0;
+
+        playerSavedData.quickItemList = null;
+        playerSavedData.inventory = null;
+
+        playerSavedData.EXP = 0;
     }
 }

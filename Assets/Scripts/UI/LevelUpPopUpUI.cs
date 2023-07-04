@@ -8,6 +8,8 @@ public class LevelUpPopUpUI : PopUpUI
 {
     static bool isOpened = false;
     private int startEXP;
+    public string curScene;
+    public int spawnPointIndex;
     public static bool IsOpened { get { return isOpened; } }
     
     protected override void Awake()
@@ -29,6 +31,7 @@ public class LevelUpPopUpUI : PopUpUI
 
         buttons["ApplyButton"].onClick.AddListener(OnApplyButton);
         buttons["RevertButton"].onClick.AddListener(OnRevertButton);
+        buttons["SaveButton"].onClick.AddListener(OnSaveButton);
     }
     private void OnEnable()
     {
@@ -109,7 +112,7 @@ public class LevelUpPopUpUI : PopUpUI
     {
         if (int.TryParse(texts["EnduranceCount"].text, out enduranceCount))
         {
-            if (GameManager.Data.PlayerStatusData.vitality < enduranceCount)
+            if (GameManager.Data.PlayerStatusData.endurance < enduranceCount)
             {
                 enduranceCount--;
                 GameManager.Data.CurEXP += enduranceCount * 50;
@@ -138,7 +141,7 @@ public class LevelUpPopUpUI : PopUpUI
     {
         if (int.TryParse(texts["ResistanceCount"].text, out resistanceCount))
         {
-            if (GameManager.Data.PlayerStatusData.vitality < resistanceCount)
+            if (GameManager.Data.PlayerStatusData.resistance < resistanceCount)
             {
                 resistanceCount--;
                 GameManager.Data.CurEXP += resistanceCount * 50;
@@ -167,7 +170,7 @@ public class LevelUpPopUpUI : PopUpUI
     {
         if (int.TryParse(texts["StrengthCount"].text, out strengthCount))
         {
-            if (GameManager.Data.PlayerStatusData.vitality < strengthCount)
+            if (GameManager.Data.PlayerStatusData.strength < strengthCount)
             {
                 strengthCount--;
                 GameManager.Data.CurEXP += strengthCount * 50;
@@ -196,7 +199,7 @@ public class LevelUpPopUpUI : PopUpUI
     {
         if (int.TryParse(texts["DexerityCount"].text, out dexerityCount))
         {
-            if (GameManager.Data.PlayerStatusData.vitality < dexerityCount)
+            if (GameManager.Data.PlayerStatusData.dexerity < dexerityCount)
             {
                 dexerityCount--;
                 GameManager.Data.CurEXP += dexerityCount * 50;
@@ -215,13 +218,24 @@ public class LevelUpPopUpUI : PopUpUI
         GameManager.Data.PlayerStatusData.strength = strengthCount;
         GameManager.Data.PlayerStatusData.dexerity = dexerityCount;
 
-        //GameManager.Data.SaveData();
-        CloseUI();
+        startEXP = GameManager.Data.CurEXP;
+
+        PlayerStatusController.OnStatusChanged?.Invoke();
     }
 
     public void OnRevertButton()
     {
         GameManager.Data.CurEXP = startEXP;
         CloseUI();
+    }
+
+    public void OnSaveButton()
+    {
+        GameManager.Data.PlayerStatusData.savedScene = curScene;
+        GameManager.Data.PlayerStatusData.savedSpawnPointIndex = spawnPointIndex;
+        OnApplyButton();
+        GameManager.Data.SaveData();
+        CloseUI();
+        GameManager.Scene.LoadScene(curScene, "");
     }
 }

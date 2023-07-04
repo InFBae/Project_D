@@ -26,10 +26,7 @@ MonoBehaviour:
   resistance: 1
   strength: 1
   dexerity: 1
-  savedScene: 
-  savedSpawnPoint: {fileID: 0}
-  quickItemList: []
+  savedScene: Scenes/DungeonMaps/Room_MainArea
+  savedSpawnPointIndex: 0
   quickItemIndex: 0
-  inventory:
-  - {fileID: 0}
   EXP: 0

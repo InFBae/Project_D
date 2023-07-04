@@ -43,12 +43,12 @@ public class PlayerAttacker : MonoBehaviour
         {
             // 공격 중일 때
             if (stateController.CurState == PlayerStateController.State.Attacking &&
-                statusController.GetCurrentSP() >= 1.5f &&
+                statusController.GetCurrentSP() >= 15f &&
                 animator.GetBool("ContinuousAttack"))
             {
                 animator.SetBool("IsAttacking", true);
                 animator.SetBool("ContinuousAttack", false);
-                statusController.DecreaseSP(1.5f);
+                statusController.DecreaseSP(15f);
 
                 // hitTable 초기화
                 hitTable.Clear();
@@ -82,12 +82,12 @@ public class PlayerAttacker : MonoBehaviour
 
     public IEnumerator StrongAttackRoutine()
     {
-        if ( statusController.GetCurrentSP() >= 3f)
+        if ( statusController.GetCurrentSP() >= 30f)
         {
             rig.weight = 0f;
             animator.SetTrigger("StrongAttack");
             animator.SetBool("IsAttacking", true);
-            statusController.DecreaseSP(3f);
+            statusController.DecreaseSP(30f);
 
             // hitTable 초기화
             hitTable.Clear();

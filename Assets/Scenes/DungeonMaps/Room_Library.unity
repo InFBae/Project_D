@@ -95498,6 +95498,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4258858134412639615, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Spine_01'\n\tTransform 'Hips'\n\tTransform
+        'Spine_01'\n\tTransform 'Hips'\n\tTransform 'Spine_01'\n\tTransform 'Hips'"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b0b55f9c1122464dbcfc2a8461e83cb, type: 3}
 --- !u!4 &2005920541 stripped

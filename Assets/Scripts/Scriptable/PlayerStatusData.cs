@@ -50,7 +50,7 @@ public class PlayerStatusData : ScriptableObject, ISerializationCallbackReceiver
 
     // ÇöÀç ¸Ê
     public string savedScene;      
-    public Transform savedSpawnPoint;
+    public int savedSpawnPointIndex;
 
     // Äü ¾ÆÀÌÅÛ
     public List<Item> quickItemList;

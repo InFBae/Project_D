@@ -35,9 +35,8 @@ public class PlayerHitter : MonoBehaviour
         rig.weight = 0;
        
         animator.SetInteger("TakeHitType", (int)hitType);
-
-        currentTime = 0;
-        statusController.DecreaseHP(1);
+       
+        statusController.DecreaseHP(damage);
 
         if (hitType == IHittable.HitType.Strong)
         {
@@ -48,6 +47,7 @@ public class PlayerHitter : MonoBehaviour
             hitTime = weakHitTime;
         }
 
+        currentTime = 0;
         animator.SetTrigger("TakeHit");
         while (currentTime < hitTime)
         {

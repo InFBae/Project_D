@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerStatusController : MonoBehaviour
@@ -8,7 +9,7 @@ public class PlayerStatusController : MonoBehaviour
     [SerializeField] private StatusInfoSceneUI statusInfoSceneUI;
     private PlayerStatusData statusData;
 
-    private const int HP = 0, SP = 1, DP = 2;
+    public static UnityAction OnStatusChanged; 
 
     private void Awake()
     {
@@ -17,12 +18,10 @@ public class PlayerStatusController : MonoBehaviour
 
     private void Start()
     {
-        maxHP = statusData.maxHP;
+        StatusUpdate();
         curHP = maxHP;
-        maxSP = statusData.maxSP;
         curSP = maxSP;
         spRechargeTime = statusData.spRechargeTime;
-        curDP = statusData.DP;
 
         statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.sprite);
         statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.sprite);
@@ -46,6 +45,16 @@ public class PlayerStatusController : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        OnStatusChanged += StatusUpdate;
+    }
+
+    private void OnDisable()
+    {
+        OnStatusChanged -= StatusUpdate;
+    }
+
     private void Update()
     {
         SPRechargeTime();
@@ -57,6 +66,13 @@ public class PlayerStatusController : MonoBehaviour
     {
         statusInfoSceneUI.SetHP(curHP/maxHP);
         statusInfoSceneUI.SetSP(curSP/maxSP);
+    }
+
+    private void StatusUpdate()
+    {
+        maxHP = statusData.maxHP + statusData.vitality * 10;
+        maxSP = statusData.maxSP + statusData.endurance * 10;
+        curDP = statusData.DP;
     }
 
     #region HP
@@ -81,7 +97,7 @@ public class PlayerStatusController : MonoBehaviour
 
         if(curHP <= 0)
         {
-            // TODO: GameOver;
+            PlayerStateController.OnPlayerDied?.Invoke();
         }
     }
 
@@ -92,7 +108,7 @@ public class PlayerStatusController : MonoBehaviour
     private float curSP;
 
     // 스태미나 증가량
-    private float spIncreaseSpeed = 2;
+    private float spIncreaseSpeed = 10;
 
     // 스태미나 재회복 딜레이 시간
     private float spRechargeTime;
@@ -100,7 +116,6 @@ public class PlayerStatusController : MonoBehaviour
 
     // 스태미나 감소 여부
     private bool spUsed;
-
 
     public void DecreaseSP(float sp)
     {
@@ -187,6 +202,11 @@ public class PlayerStatusController : MonoBehaviour
         {
             statusInfoSceneUI.SetNextItem(statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite);
         }
+    }
+
+    public void DIsableStatusSceneUI()
+    {
+        statusInfoSceneUI.enabled = false;
     }
 
 }
