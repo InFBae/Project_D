@@ -71752,22 +71752,6 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 163931870}
-    - target: {fileID: 7560735364225124747, guid: f45bfd1b0dc83c0458227955a9c9d638, type: 3}
-      propertyPath: m_Mass
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7560735364225124747, guid: f45bfd1b0dc83c0458227955a9c9d638, type: 3}
-      propertyPath: m_Constraints
-      value: 112
-      objectReference: {fileID: 0}
-    - target: {fileID: 7560735364225124747, guid: f45bfd1b0dc83c0458227955a9c9d638, type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7560735364225124747, guid: f45bfd1b0dc83c0458227955a9c9d638, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7560735364225124748, guid: f45bfd1b0dc83c0458227955a9c9d638, type: 3}
       propertyPath: m_Name
       value: SkeletonBoss
