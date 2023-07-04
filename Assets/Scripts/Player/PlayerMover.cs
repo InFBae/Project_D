@@ -30,6 +30,20 @@ public class PlayerMover : MonoBehaviour
         stateController = GetComponent<PlayerStateController>();
     }
 
+    public void StartRoutines()
+    {
+        moveRoutine = StartCoroutine(MoveRoutine());
+        fallRoutine = StartCoroutine(FallRoutine());
+        lookRoutine = StartCoroutine(LookRoutine());
+    }
+
+    public void StopRoutines()
+    {
+        StopCoroutine(moveRoutine);
+        StopCoroutine(fallRoutine);
+        StopCoroutine(lookRoutine);
+    }
+
     public Coroutine moveRoutine;
     public IEnumerator MoveRoutine()
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class PlayerAttacker : MonoBehaviour
@@ -10,6 +11,7 @@ public class PlayerAttacker : MonoBehaviour
     private PlayerStatusController statusController;
     private PlayerStateController stateController;
     private Dictionary<IHittable, float> hitTable;
+    private Rig rig;
 
     [SerializeField] Weapon curWeapon;
      
@@ -20,9 +22,10 @@ public class PlayerAttacker : MonoBehaviour
         statusController = GetComponent<PlayerStatusController>();
         stateController = GetComponent<PlayerStateController>();
         hitTable = new Dictionary<IHittable, float>();
+        rig = GetComponentInChildren<Rig>();
 
         curWeapon.hitTable = hitTable;
-        curWeapon.owner = gameObject;
+        curWeapon.owner = stateController;
     }
 
     private void Start()
@@ -31,7 +34,6 @@ public class PlayerAttacker : MonoBehaviour
     }
 
     public bool continuousAttack;
-    private float currentAttackTime;
     private float attackTime;
 
     public Coroutine attackRoutine;
@@ -53,12 +55,8 @@ public class PlayerAttacker : MonoBehaviour
                 curWeapon?.EnableCollider();
                 
                 // 공격 시간만큼 공격 실행
-                currentAttackTime = 0;
-                while (currentAttackTime < attackTime)
-                {
-                    currentAttackTime += Time.deltaTime;
-                    yield return null;
-                }
+                yield return new WaitForSeconds(attackTime);
+
                 animator.SetBool("IsAttacking", false);
                 curWeapon?.DisableCollider();
                 if (!animator.GetBool("ContinuousAttack"))
@@ -82,6 +80,28 @@ public class PlayerAttacker : MonoBehaviour
         }     
     }
 
+    public IEnumerator StrongAttackRoutine()
+    {
+        if ( statusController.GetCurrentSP() >= 3f)
+        {
+            rig.weight = 0f;
+            animator.SetTrigger("StrongAttack");
+            animator.SetBool("IsAttacking", true);
+            statusController.DecreaseSP(3f);
 
+            // hitTable 초기화
+            hitTable.Clear();
+
+            yield return new WaitForSeconds(0.5f);
+            curWeapon?.EnableCollider();
+            yield return new WaitForSeconds(0.5f);           
+            curWeapon?.DisableCollider();
+            yield return new WaitForSeconds(1f);
+
+            animator.SetBool("IsAttacking", false);
+            rig.weight = 1f;            
+        }
+        stateController.CurState = (PlayerStateController.State)stateController.IsMoving();
+    }
 
 }

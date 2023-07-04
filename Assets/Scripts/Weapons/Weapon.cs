@@ -9,7 +9,7 @@ public abstract class Weapon : MonoBehaviour
     protected Collider coll;
     public Dictionary<IHittable, float> hitTable;
 
-    public GameObject owner;
+    public PlayerStateController owner;
 
     protected virtual void Awake()
     {
@@ -22,11 +22,18 @@ public abstract class Weapon : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         IHittable hittable = other.GetComponent<IHittable>();
+        float damage;
         if (hittable != null)
         {
             if (hitTable.TryAdd(hittable, GetDamage()))
             {
-                hittable.TakeHit(GetDamage(), owner);
+                if(owner.attackType == IHittable.HitType.Strong)
+                {
+                    damage = GetDamage() * 2f;
+                }
+                else 
+                    damage = GetDamage();
+                hittable.TakeHit(damage, owner.gameObject, owner.attackType);
             }
         }
     }

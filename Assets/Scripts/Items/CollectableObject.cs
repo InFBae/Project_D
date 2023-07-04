@@ -18,7 +18,7 @@ public class CollectableObject : MonoBehaviour, ICollectable
                     if (data.itemName == item.Data.itemName)
                     {
                         GameManager.UI.FloatMessage(item, count);
-                        item.IncreaseCount(count);
+                        item.SetCount(count);
                         return;
                     }
                 }
@@ -28,7 +28,7 @@ public class CollectableObject : MonoBehaviour, ICollectable
         {
             RedPotion redPotion = new RedPotion();
             redPotion.owner = playerStatusController;            
-            redPotion.IncreaseCount(count);
+            redPotion.SetCount(count);
             GameManager.Data.PlayerStatusData.inventory.Add(redPotion);
             GameManager.UI.FloatMessage(redPotion, count);
         }
@@ -36,7 +36,7 @@ public class CollectableObject : MonoBehaviour, ICollectable
         {
             BluePotion bluePotion = new BluePotion();
             bluePotion.owner = playerStatusController;
-            bluePotion.IncreaseCount(count);
+            bluePotion.SetCount(count);
             GameManager.Data.PlayerStatusData.inventory.Add(bluePotion);
             GameManager.UI.FloatMessage(bluePotion, count);
         }

@@ -11,13 +11,8 @@ public class Item
     public ItemData Data { get { return data; } }
     public int Count { get { return count; } }
 
-    public void IncreaseCount(int num)
+    public void SetCount(int num)
     {
-        count += num;
-    }
-
-    public void DecreaseCount(int num)
-    {
-        count -= num;
+        count = num;
     }
 }

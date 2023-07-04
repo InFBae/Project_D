@@ -9,13 +9,14 @@ public class DataManager : MonoBehaviour
     private PlayerStatusData playerSavedData;
     private Transform playerTransform;
     private int curEXP;
-
+    private PlayerStateController.State playerState;
     public PlayerStatusData PlayerStatusData { get { return playerStatusData; } }
     public Transform PlayerTransform { 
         get { return playerTransform; } 
         set { playerTransform = value; }
     }
     public int CurEXP { get { return curEXP; } set {  curEXP = value;  OnEXPChanged?.Invoke(curEXP); } }
+    public PlayerStateController.State PlayerState { get { return playerState; } set { playerState = value; } }
 
     public UnityAction<int> OnEXPChanged;
 
