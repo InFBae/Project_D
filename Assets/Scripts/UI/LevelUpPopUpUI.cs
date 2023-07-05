@@ -219,8 +219,6 @@ public class LevelUpPopUpUI : PopUpUI
         GameManager.Data.PlayerStatusData.dexerity = dexerityCount;
 
         startEXP = GameManager.Data.CurEXP;
-
-        PlayerStatusController.OnStatusChanged?.Invoke();
     }
 
     public void OnRevertButton()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +11,8 @@ public class StatusInfoSceneUI : SceneUI
     protected override void Awake()
     {
         base.Awake();
+        SetHP(GameManager.Data.CurHP);
+        SetSP(GameManager.Data.CurSP);
         SetEXP(GameManager.Data.CurEXP);
         SetQuickSlot();
     }
@@ -17,22 +20,26 @@ public class StatusInfoSceneUI : SceneUI
     private void OnEnable()
     {
         GameManager.Data.OnEXPChanged += SetEXP;
+        GameManager.Data.OnHPChanged += SetHP;
+        GameManager.Data.OnSPChanged += SetSP;
         OnQuickSlotChanged += SetQuickSlot;
     }
     private void OnDisable()
     {
         GameManager.Data.OnEXPChanged -= SetEXP;
+        GameManager.Data.OnHPChanged -= SetHP;
+        GameManager.Data.OnSPChanged -= SetSP;
         OnQuickSlotChanged -= SetQuickSlot;
     }
 
     public void SetHP(float HP)
     {
-        sliders["HPBar"].value = HP;
+        sliders["HPBar"].value = HP / GameManager.Data.PlayerStatusData.MaxHP;
     }
 
     public void SetSP(float SP)
     {
-        sliders["SPBar"].value = SP;
+        sliders["SPBar"].value = SP / GameManager.Data.PlayerStatusData.MaxSP;
     }
 
     public void SetLeftWeapon(Sprite sprite)
@@ -47,20 +54,19 @@ public class StatusInfoSceneUI : SceneUI
 
     public void SetQuickSlot()
     {
-        List<Item> quickItemList = GameManager.Data.PlayerStatusData.quickItemList;
-        int index = GameManager.Data.PlayerStatusData.quickItemIndex;
-        if (quickItemList.Count > 0)
+        if (GameManager.Data.PlayerStatusData.quickItemList.Count > 0)
         {
+            int quickItemIndex = GameManager.Data.PlayerStatusData.quickItemIndex % GameManager.Data.PlayerStatusData.quickItemList.Count;
             images["QuickItemImage"].color = Color.white;
-            images["QuickItemImage"].sprite = quickItemList[index].Data.sprite;
-            if (quickItemList[index].Count > 0)
+            images["QuickItemImage"].sprite = GameManager.Data.PlayerStatusData.quickItemList[quickItemIndex].Data.sprite;
+            if (GameManager.Data.PlayerStatusData.quickItemList[quickItemIndex].Count > 0)
             {
                 texts["QuickItemCount"].enabled = true;
-                texts["QuickItemCount"].text = quickItemList[index].Count.ToString();
+                texts["QuickItemCount"].text = GameManager.Data.PlayerStatusData.quickItemList[quickItemIndex].Count.ToString();
             }
             else
             {
-                quickItemList.RemoveAt(index);         
+                GameManager.Data.PlayerStatusData.quickItemList.RemoveAt(quickItemIndex);
                 /*images["QuickItemImage"].color = Color.black;
                 images["QuickItemImage"].sprite = null;
                 texts["QuickItemCount"].enabled = false;*/
@@ -74,10 +80,11 @@ public class StatusInfoSceneUI : SceneUI
             texts["QuickItemCount"].enabled = false;
         }
         
-        if (quickItemList.Count > 1)
+        if (GameManager.Data.PlayerStatusData.quickItemList.Count > 1)
         {
+            int nextItemIndex = (GameManager.Data.PlayerStatusData.quickItemIndex + 1) % GameManager.Data.PlayerStatusData.quickItemList.Count;
             images["NextItemImage"].color = Color.white;
-            images["NextItemImage"].sprite = quickItemList[(index + 1) % quickItemList.Count].Data.sprite; ;
+            images["NextItemImage"].sprite = GameManager.Data.PlayerStatusData.quickItemList[nextItemIndex].Data.sprite; 
         }
         else
         {

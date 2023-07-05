@@ -21,9 +21,13 @@ public class DataManager : MonoBehaviour
         set { playerTransform = value; }
     }
     public int CurEXP { get { return curEXP; } set {  curEXP = value;  OnEXPChanged?.Invoke(curEXP); } }
+    public float CurHP { get { return curHP; } set { curHP = value; OnHPChanged?.Invoke(curHP); } }
+    public float CurSP { get { return curSP; } set { curSP = value; OnSPChanged?.Invoke(curSP); } }
     public PlayerStateController.State PlayerState { get { return playerState; } set { playerState = value; } }
 
     public UnityAction<int> OnEXPChanged;
+    public UnityAction<float> OnHPChanged;
+    public UnityAction<float> OnSPChanged;
 
     private void Start()
     {
@@ -32,11 +36,34 @@ public class DataManager : MonoBehaviour
         LoadData();
     }
 
+    public void IncreaseHP(float hp)
+    {
+        if (GameManager.Data.CurHP + hp < GameManager.Data.PlayerStatusData.MaxHP) { GameManager.Data.CurHP += hp; }
+        else { GameManager.Data.CurHP = GameManager.Data.PlayerStatusData.MaxHP; }
+    }
+
+    public void DecreaseHP(float hp)
+    {
+        float damage = hp;
+
+        if (PlayerStatusData.DP > 0)
+        {
+            damage = (hp - PlayerStatusData.DP) > 0 ? hp - PlayerStatusData.DP : 0;
+        }
+        GameManager.Data.CurHP -= damage;
+
+        if (GameManager.Data.CurHP <= 0)
+        {
+            PlayerStateController.OnPlayerDied?.Invoke();
+        }
+    }
+
+
     public void SaveData()
     {
         PlayerStatusData playerSavedData = new PlayerStatusData();
-        playerSavedData.maxHP = playerStatusData.maxHP;
-        playerSavedData.maxSP = playerStatusData.maxSP;
+        playerSavedData.defaultHP = playerStatusData.defaultHP;
+        playerSavedData.defaultSP = playerStatusData.defaultSP;
         playerSavedData.spRechargeTime = playerStatusData.spRechargeTime;
         
         playerSavedData.leftWeapon = playerStatusData.leftWeapon;
@@ -51,11 +78,9 @@ public class DataManager : MonoBehaviour
         playerSavedData.savedScene = playerStatusData.savedScene;
         playerSavedData.savedSpawnPointIndex = playerStatusData.savedSpawnPointIndex;
 
-        if (playerSavedData.quickItemList == null)
-            playerSavedData.quickItemList = new List<Item>();
+        playerSavedData.quickItemList = new List<Item>();
         if (playerStatusData.quickItemList != null)
         {
-            playerSavedData.quickItemList.Clear();
             foreach (Item item in playerStatusData.quickItemList)
             {
                 playerSavedData.quickItemList.Add(item);
@@ -63,11 +88,9 @@ public class DataManager : MonoBehaviour
             playerSavedData.quickItemIndex = playerStatusData.quickItemIndex;
         }
         
-        if (playerSavedData.inventory == null)
-            playerSavedData.inventory = new List<Item>();
+        playerSavedData.inventory = new List<Item>();
         if (playerStatusData.inventory != null)
         {
-            playerSavedData.inventory.Clear();
             foreach (Item item in playerStatusData.inventory)
             {
                 playerSavedData.inventory.Add(item);
@@ -95,8 +118,8 @@ public class DataManager : MonoBehaviour
 
             if (playerSavedData != null)
             {
-                playerStatusData.maxHP = playerSavedData.maxHP;
-                playerStatusData.maxSP = playerSavedData.maxSP;
+                playerStatusData.defaultHP = playerSavedData.defaultHP;
+                playerStatusData.defaultSP = playerSavedData.defaultSP;
                 playerStatusData.spRechargeTime = playerSavedData.spRechargeTime;
 
                 playerStatusData.leftWeapon = playerSavedData.leftWeapon;
@@ -111,39 +134,55 @@ public class DataManager : MonoBehaviour
                 playerStatusData.savedScene = playerSavedData.savedScene;
                 playerStatusData.savedSpawnPointIndex = playerSavedData.savedSpawnPointIndex;
 
-                if (playerStatusData.quickItemList == null)
-                    playerStatusData.quickItemList = new List<Item>();
+                playerStatusData.inventory = new List<Item>();
+                if (playerSavedData.inventory != null)
+                {
+                    foreach (Item item in playerSavedData.inventory)
+                    {
+                        if (item.name == "RedPotion")
+                        {
+                            RedPotion redPotion = new RedPotion();
+                            redPotion.SetCount(item.count);
+                            playerStatusData.inventory.Add(redPotion);
+                        }
+                        else if (item.name == "BluePotion")
+                        {
+                            BluePotion bluePotion = new BluePotion();
+                            bluePotion.SetCount(item.count);
+                            playerStatusData.inventory.Add(bluePotion);
+                        }
+                    }
+                }
+
+                playerStatusData.quickItemList = new List<Item>();
                 if (playerSavedData.quickItemList != null)
                 {
-                    playerStatusData.quickItemList.Clear();
                     foreach (Item item in playerSavedData.quickItemList)
                     {
-                        playerStatusData.quickItemList.Add(item);
+                        foreach(Item inventoryItem in GameManager.Data.PlayerStatusData.inventory)
+                        {
+                            if(item.name == inventoryItem.name)
+                            {
+                                playerStatusData.quickItemList.Add(inventoryItem);
+                                break;
+                            }
+                        }                        
                     }
                     playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
                 }
 
-                if (playerStatusData.inventory == null)
-                    playerStatusData.inventory = new List<Item>();
-                if (playerSavedData.inventory != null)
-                {
-                    playerStatusData.inventory.Clear();
-                    foreach (Item item in playerSavedData.inventory)
-                    {
-                        playerStatusData.inventory.Add(item);
-                    }
-                }
-
                 playerStatusData.EXP = playerSavedData.EXP;
                 CurEXP = playerSavedData.EXP;
+                CurHP = playerStatusData.MaxHP;
+                CurSP = playerStatusData.MaxSP;
             }
         } 
     }
 
     public void ClearData()
     {
-        playerStatusData.maxHP = 100;
-        playerStatusData.maxSP = 100;
+        playerStatusData.defaultHP = 100;
+        playerStatusData.defaultSP = 100;
         playerStatusData.spRechargeTime = 1.5f;
 
         playerStatusData.leftWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/Shield");
@@ -162,6 +201,7 @@ public class DataManager : MonoBehaviour
         playerStatusData.inventory = new List<Item>();
 
         playerStatusData.EXP = 0;
+        CurEXP = 0;
 
         SaveData();
     }

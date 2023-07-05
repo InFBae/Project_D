@@ -1,12 +1,12 @@
 {
-    "maxHP": 100.0,
-    "maxSP": 100.0,
+    "defaultHP": 100.0,
+    "defaultSP": 100.0,
     "spRechargeTime": 1.5,
     "leftWeapon": {
-        "instanceID": 24972
+        "instanceID": 24978
     },
     "rightWeapon": {
-        "instanceID": 24916
+        "instanceID": 24924
     },
     "armorHead": {
         "instanceID": 0
@@ -24,11 +24,41 @@
     "endurance": 1,
     "resistance": 1,
     "strength": 1,
-    "dexerity": 1,
-    "savedScene": "",
+    "dexerity": 2,
+    "savedScene": "Scenes/DungeonMaps/Room_MainArea",
     "savedSpawnPointIndex": 0,
-    "quickItemList": [],
+    "inventory": [
+        {
+            "data": {
+                "instanceID": 24920
+            },
+            "count": 2,
+            "name": "BluePotion"
+        },
+        {
+            "data": {
+                "instanceID": 24944
+            },
+            "count": 1,
+            "name": "RedPotion"
+        }
+    ],
+    "quickItemList": [
+        {
+            "data": {
+                "instanceID": 24920
+            },
+            "count": 2,
+            "name": "BluePotion"
+        },
+        {
+            "data": {
+                "instanceID": 24944
+            },
+            "count": 1,
+            "name": "RedPotion"
+        }
+    ],
     "quickItemIndex": 0,
-    "inventory": [],
-    "EXP": 170
+    "EXP": 20
 }

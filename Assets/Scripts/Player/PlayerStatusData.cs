@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 public class PlayerStatusData : ISerializationCallbackReceiver
 {
-    public float maxHP;
-    public float maxSP;
+    public float defaultHP;
+    public float defaultSP;
     public float spRechargeTime;
     public float AP { 
         get 
@@ -32,6 +32,9 @@ public class PlayerStatusData : ISerializationCallbackReceiver
             return defense;
         }
     }
+    public float MaxHP { get { return defaultHP + vitality * 10; } }
+    public float MaxSP { get { return defaultSP + endurance * 10; } }
+
     public WeaponData leftWeapon;
     public WeaponData rightWeapon;
 
@@ -50,25 +53,25 @@ public class PlayerStatusData : ISerializationCallbackReceiver
     public string savedScene;      
     public int savedSpawnPointIndex;
 
+    // 인벤토리
+    public List<Item> inventory;
+
     // 퀵 아이템
     public List<Item> quickItemList;
     public int quickItemIndex;
-
-    // 인벤토리
-    public List<Item> inventory;
 
     public int EXP;
 
     public void OnBeforeSerialize()
     {
+        if (inventory == null)
+        {
+            inventory = new List<Item>();
+        }
         if (quickItemList == null)
         {
             quickItemList = new List<Item>();
             quickItemIndex = 0;
-        }
-        if (inventory == null)
-        {
-            inventory = new List<Item>();
         }
     }
 

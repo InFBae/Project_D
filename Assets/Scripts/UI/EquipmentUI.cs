@@ -14,6 +14,12 @@ public class EquipmentUI : BaseUI
     private void OnEnable()
     {
         InitUI();
+        StatusInfoSceneUI.OnQuickSlotChanged += InitUI;
+    }
+
+    private void OnDisable()
+    {
+        StatusInfoSceneUI.OnQuickSlotChanged -= InitUI;
     }
     public void InitUI()
     {
@@ -98,9 +104,10 @@ public class EquipmentUI : BaseUI
         // quickItem
         if (statusData.quickItemList.Count > 0)
         {
+            int quickItemIndex = statusData.quickItemIndex % statusData.quickItemList.Count;
             images["QuickItemIcon"].color = Color.white;
-            images["QuickItemIcon"].sprite = statusData.quickItemList[statusData.quickItemIndex].Data.sprite;
-            texts["QuickItemText"].text = statusData.quickItemList[statusData.quickItemIndex].Data.instruction;
+            images["QuickItemIcon"].sprite = statusData.quickItemList[quickItemIndex].Data.sprite;
+            texts["QuickItemText"].text = statusData.quickItemList[quickItemIndex].Data.instruction;
         }
         else
         {
@@ -112,9 +119,10 @@ public class EquipmentUI : BaseUI
         // nextItem
         if (statusData.quickItemList.Count > 1)
         {
+            int nextItemIndex = (statusData.quickItemIndex + 1) % statusData.quickItemList.Count;
             images["NextItemIcon"].color = Color.white;
-            images["NextItemIcon"].sprite = statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite;
-            texts["NextItemText"].text = statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.instruction;
+            images["NextItemIcon"].sprite = statusData.quickItemList[nextItemIndex].Data.sprite;
+            texts["NextItemText"].text = statusData.quickItemList[nextItemIndex].Data.instruction;
         }
         else
         {

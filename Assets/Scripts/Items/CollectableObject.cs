@@ -27,8 +27,7 @@ public class CollectableObject : MonoBehaviour, ICollectable
         }
         if (data.itemName == "RedPotion")
         {
-            RedPotion redPotion = new RedPotion();
-            redPotion.owner = playerStatusController;            
+            RedPotion redPotion = new RedPotion();         
             redPotion.SetCount(count);
             GameManager.Data.PlayerStatusData.inventory.Add(redPotion);
             GameManager.UI.FloatMessage(redPotion, count);
@@ -36,7 +35,6 @@ public class CollectableObject : MonoBehaviour, ICollectable
         else if (data.itemName == "BluePotion")
         {
             BluePotion bluePotion = new BluePotion();
-            bluePotion.owner = playerStatusController;
             bluePotion.SetCount(count);
             GameManager.Data.PlayerStatusData.inventory.Add(bluePotion);
             GameManager.UI.FloatMessage(bluePotion, count);

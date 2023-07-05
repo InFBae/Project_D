@@ -10,4 +10,6 @@ public class ItemData : ScriptableObject
     public Sprite sprite;
     public string instruction;
     public bool isStackable;
+    public bool isUsable;
+
 }
