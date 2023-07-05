@@ -24,7 +24,6 @@ public class DataManager : MonoBehaviour
     {
         playerStatusData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerStatusData");
         playerSavedData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerSavedData");
-        LoadData();
     }
 
     public void SaveData()

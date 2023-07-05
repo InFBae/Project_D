@@ -80,7 +80,8 @@ public class ResourceManager : MonoBehaviour
     IEnumerator DelayReleaseRoutine(GameObject go, float delay)
     {
         yield return new WaitForSeconds(delay);
-        GameManager.Pool.Release(go);
+        if (go.IsValid())
+            GameManager.Pool.Release(go);
     }
 
     public void Destroy(Component component, float delay = 0f)

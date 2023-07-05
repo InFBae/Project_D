@@ -10,6 +10,7 @@ public class SlimeSpawner : MonsterSpawner
         base.Awake();
 
         Slime slime = GameManager.Pool.Get<Monster>(monster, transform.position, transform.rotation, transform) as Slime;
+        slime.transform.SetParent(transform);
 
         slime.Regen();
     }

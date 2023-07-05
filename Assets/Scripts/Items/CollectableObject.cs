@@ -18,7 +18,8 @@ public class CollectableObject : MonoBehaviour, ICollectable
                     if (data.itemName == item.Data.itemName)
                     {
                         GameManager.UI.FloatMessage(item, count);
-                        item.SetCount(count);
+                        item.SetCount(item.Count + count);
+                        StatusInfoSceneUI.OnQuickSlotChanged?.Invoke();
                         return;
                     }
                 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BluePotion : Item
+public class BluePotion : Item, IUsable
 {
     public BluePotion()
     {
@@ -14,6 +14,10 @@ public class BluePotion : Item
         {
             owner.IncreaseHP(50);
             count--;
+            if (count == 0)
+            {
+                GameManager.Data.PlayerStatusData.inventory.Remove(this);
+            }
         }
 
     }

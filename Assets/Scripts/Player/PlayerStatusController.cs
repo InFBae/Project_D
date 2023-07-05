@@ -25,24 +25,7 @@ public class PlayerStatusController : MonoBehaviour
 
         statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.sprite);
         statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.sprite);
-        if(statusData.quickItemList.Count > 0)
-        {
-            statusInfoSceneUI.SetQuickItem(statusData.quickItemList[statusData.quickItemIndex].Data.sprite);
-            statusInfoSceneUI.SetQuickItemCount(statusData.quickItemList[statusData.quickItemIndex].Count);
-        }
-        else
-        {
-            statusInfoSceneUI.SetQuickItem(null);
-            statusInfoSceneUI.SetQuickItemCount(0);
-        }
-        if(statusData.quickItemList.Count > 1)
-        {
-            statusInfoSceneUI.SetNextItem(statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite);
-        }
-        else
-        {
-            statusInfoSceneUI.SetNextItem(null);
-        }
+        statusInfoSceneUI.SetQuickSlot();
     }
 
     private void OnEnable()
@@ -195,13 +178,16 @@ public class PlayerStatusController : MonoBehaviour
             statusData.quickItemIndex = statusData.quickItemIndex - 1 < 0 ? statusData.quickItemList.Count - 1 : statusData.quickItemIndex - 1;            
         }
 
-        statusInfoSceneUI.SetQuickItem(statusData.quickItemList[statusData.quickItemIndex].Data.sprite);
-        statusInfoSceneUI.SetQuickItemCount(statusData.quickItemList[statusData.quickItemIndex].Count);
+        statusInfoSceneUI.SetQuickSlot();
+    }
 
-        if (statusData.quickItemList.Count > 1)
+    private void OnUseItem()
+    {
+        if (GameManager.Data.PlayerStatusData.quickItemList.Count > 0)
         {
-            statusInfoSceneUI.SetNextItem(statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite);
-        }
+            (GameManager.Data.PlayerStatusData.quickItemList[GameManager.Data.PlayerStatusData.quickItemIndex] as IUsable).Use();
+            StatusInfoSceneUI.OnQuickSlotChanged?.Invoke();
+        }       
     }
 
     public void DIsableStatusSceneUI()

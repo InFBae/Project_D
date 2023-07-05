@@ -15,6 +15,10 @@ public class RedPotion : Item, IUsable
         {
             owner.IncreaseHP((GameManager.Data.PlayerStatusData.maxHP / 2));
             count--;
+            if (count == 0)
+            {
+                GameManager.Data.PlayerStatusData.inventory.Remove(this);
+            }
         }
         
     }
