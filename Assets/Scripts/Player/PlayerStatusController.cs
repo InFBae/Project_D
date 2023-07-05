@@ -13,7 +13,7 @@ public class PlayerStatusController : MonoBehaviour
 
     private void Awake()
     {
-        statusData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerStatusData");
+        statusData = GameManager.Data.PlayerStatusData;
     }
 
     private void Start()

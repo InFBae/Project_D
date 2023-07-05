@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class DataManager : MonoBehaviour
 {
     private PlayerStatusData playerStatusData;
-    private PlayerStatusData playerSavedData;
     private Transform playerTransform;
+    string path;
+
     private int curEXP;
+    private float curHP;
+    private float curSP;
+
     private PlayerStateController.State playerState;
     public PlayerStatusData PlayerStatusData { get { return playerStatusData; } }
     public Transform PlayerTransform { 
@@ -20,14 +25,16 @@ public class DataManager : MonoBehaviour
 
     public UnityAction<int> OnEXPChanged;
 
-    private void Awake()
+    private void Start()
     {
-        playerStatusData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerStatusData");
-        playerSavedData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerSavedData");
+        playerStatusData = new PlayerStatusData();
+        path = Path.Combine(Application.dataPath, "saveData.json");
+        LoadData();
     }
 
     public void SaveData()
     {
+        PlayerStatusData playerSavedData = new PlayerStatusData();
         playerSavedData.maxHP = playerStatusData.maxHP;
         playerSavedData.maxSP = playerStatusData.maxSP;
         playerSavedData.spRechargeTime = playerStatusData.spRechargeTime;
@@ -68,73 +75,94 @@ public class DataManager : MonoBehaviour
         }
         
         playerSavedData.EXP = CurEXP;
+
+        string json = JsonUtility.ToJson(playerSavedData, true);
+
+        File.WriteAllText(path, json);
     }
     public void LoadData()
     {
-        playerStatusData.maxHP = playerSavedData.maxHP;
-        playerStatusData.maxSP = playerSavedData.maxSP;
-        playerStatusData.spRechargeTime = playerSavedData.spRechargeTime;
-              
-        playerStatusData.leftWeapon = playerSavedData.leftWeapon;
-        playerStatusData.rightWeapon = playerSavedData.rightWeapon;
-              
-        playerStatusData.vitality = playerSavedData.vitality;
-        playerStatusData.endurance = playerSavedData.endurance;
-        playerStatusData.resistance = playerSavedData.resistance;
-        playerStatusData.strength = playerSavedData.strength;
-        playerStatusData.dexerity = playerSavedData.dexerity;
+        PlayerStatusData playerSavedData = new PlayerStatusData();
 
-        playerStatusData.savedScene = playerSavedData.savedScene;
-        playerStatusData.savedSpawnPointIndex = playerSavedData.savedSpawnPointIndex;
-
-        if (playerStatusData.quickItemList == null)
-            playerStatusData.quickItemList = new List<Item>();
-        if (playerSavedData.quickItemList != null)
+        if (!File.Exists(path))
         {
-            playerStatusData.quickItemList.Clear();
-            foreach (Item item in playerSavedData.quickItemList)
-            {
-                playerStatusData.quickItemList.Add(item);
-            }
-            playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
+            ClearData();
         }
-
-        if (playerStatusData.inventory == null)
-            playerStatusData.inventory = new List<Item>();
-        if (playerSavedData.inventory != null)
+        else
         {
-            playerStatusData.inventory.Clear();
-            foreach (Item item in playerSavedData.inventory)
-            {
-                playerStatusData.inventory.Add(item);
-            }
-        }      
+            string loadJson = File.ReadAllText(path);
+            playerSavedData = JsonUtility.FromJson<PlayerStatusData>(loadJson);
 
-        playerStatusData.EXP = playerSavedData.EXP;
-        CurEXP = playerSavedData.EXP;
+            if (playerSavedData != null)
+            {
+                playerStatusData.maxHP = playerSavedData.maxHP;
+                playerStatusData.maxSP = playerSavedData.maxSP;
+                playerStatusData.spRechargeTime = playerSavedData.spRechargeTime;
+
+                playerStatusData.leftWeapon = playerSavedData.leftWeapon;
+                playerStatusData.rightWeapon = playerSavedData.rightWeapon;
+
+                playerStatusData.vitality = playerSavedData.vitality;
+                playerStatusData.endurance = playerSavedData.endurance;
+                playerStatusData.resistance = playerSavedData.resistance;
+                playerStatusData.strength = playerSavedData.strength;
+                playerStatusData.dexerity = playerSavedData.dexerity;
+
+                playerStatusData.savedScene = playerSavedData.savedScene;
+                playerStatusData.savedSpawnPointIndex = playerSavedData.savedSpawnPointIndex;
+
+                if (playerStatusData.quickItemList == null)
+                    playerStatusData.quickItemList = new List<Item>();
+                if (playerSavedData.quickItemList != null)
+                {
+                    playerStatusData.quickItemList.Clear();
+                    foreach (Item item in playerSavedData.quickItemList)
+                    {
+                        playerStatusData.quickItemList.Add(item);
+                    }
+                    playerStatusData.quickItemIndex = playerSavedData.quickItemIndex;
+                }
+
+                if (playerStatusData.inventory == null)
+                    playerStatusData.inventory = new List<Item>();
+                if (playerSavedData.inventory != null)
+                {
+                    playerStatusData.inventory.Clear();
+                    foreach (Item item in playerSavedData.inventory)
+                    {
+                        playerStatusData.inventory.Add(item);
+                    }
+                }
+
+                playerStatusData.EXP = playerSavedData.EXP;
+                CurEXP = playerSavedData.EXP;
+            }
+        } 
     }
 
     public void ClearData()
     {
-        playerSavedData.maxHP = 100;
-        playerSavedData.maxSP = 100;
-        playerSavedData.spRechargeTime = 1.5f;
+        playerStatusData.maxHP = 100;
+        playerStatusData.maxSP = 100;
+        playerStatusData.spRechargeTime = 1.5f;
 
-        playerSavedData.leftWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/Shield");
-        playerSavedData.rightWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/OHSword");
+        playerStatusData.leftWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/Shield");
+        playerStatusData.rightWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/OHSword");
 
-        playerSavedData.vitality = 1;
-        playerSavedData.endurance = 1;
-        playerSavedData.resistance = 1;
-        playerSavedData.strength = 1;
-        playerSavedData.dexerity = 1;
+        playerStatusData.vitality = 1;
+        playerStatusData.endurance = 1;
+        playerStatusData.resistance = 1;
+        playerStatusData.strength = 1;
+        playerStatusData.dexerity = 1;
 
-        playerSavedData.savedScene = null;
-        playerSavedData.savedSpawnPointIndex = 0;
+        playerStatusData.savedScene = null;
+        playerStatusData.savedSpawnPointIndex = 0;
 
-        playerSavedData.quickItemList = null;
-        playerSavedData.inventory = null;
+        playerStatusData.quickItemList = new List<Item>();
+        playerStatusData.inventory = new List<Item>();
 
-        playerSavedData.EXP = 0;
+        playerStatusData.EXP = 0;
+
+        SaveData();
     }
 }

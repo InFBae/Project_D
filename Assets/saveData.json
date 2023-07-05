@@ -1,0 +1,34 @@
+{
+    "maxHP": 100.0,
+    "maxSP": 100.0,
+    "spRechargeTime": 1.5,
+    "leftWeapon": {
+        "instanceID": 24972
+    },
+    "rightWeapon": {
+        "instanceID": 24916
+    },
+    "armorHead": {
+        "instanceID": 0
+    },
+    "armorHand": {
+        "instanceID": 0
+    },
+    "armorUpperBody": {
+        "instanceID": 0
+    },
+    "armorLowerBody": {
+        "instanceID": 0
+    },
+    "vitality": 1,
+    "endurance": 1,
+    "resistance": 1,
+    "strength": 1,
+    "dexerity": 1,
+    "savedScene": "",
+    "savedSpawnPointIndex": 0,
+    "quickItemList": [],
+    "quickItemIndex": 0,
+    "inventory": [],
+    "EXP": 170
+}

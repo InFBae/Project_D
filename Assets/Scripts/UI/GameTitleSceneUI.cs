@@ -24,7 +24,6 @@ public class GameTitleSceneUI : SceneUI
     private void OnLoadGameButton()
     {
         GameManager.Data.LoadData();
-
         string curScene = GameManager.Data.PlayerStatusData.savedScene;
         if (curScene == null || curScene == "")
         {

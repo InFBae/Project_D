@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[CreateAssetMenu(fileName = "PlayerStatusData", menuName = "Data/PlayerStatusData")]
-public class PlayerStatusData : ScriptableObject, ISerializationCallbackReceiver
+public class PlayerStatusData : ISerializationCallbackReceiver
 {
     public float maxHP;
     public float maxSP;

@@ -235,6 +235,7 @@ public class LevelUpPopUpUI : PopUpUI
         GameManager.Data.PlayerStatusData.savedSpawnPointIndex = spawnPointIndex;
         OnApplyButton();
         GameManager.Data.SaveData();
+        GameManager.Data.LoadData();
         CloseUI();
         GameManager.Scene.LoadScene(curScene, "");
     }
