@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/GameTitleScene.unity
     guid: 135f6b5712fc6d84d895ab807d366f22
   - enabled: 1
-    path: Assets/Scenes/DungeonMaps/Room_MainArea/Corridor_BossArea.unity
+    path: Assets/Scenes/DungeonMaps/Corridor_BossArea.unity
     guid: 19babaa8b9ec1ce4abf67b0408ef73cd
   - enabled: 1
     path: Assets/Scenes/DungeonMaps/Corridor_Kitchen.unity
