@@ -156,7 +156,7 @@ public class SkeletonBoss : Monster
                         break;
                     case 3:
                         animator.SetTrigger("Skill3");
-                        yield return new WaitForSeconds(5.5f);
+                        yield return new WaitForSeconds(5.7f);
                         skillAvailability[2] = false;
                         StartCoroutine(TimerRoutine(skillCoolTime[2], 2));
                         break;
@@ -172,19 +172,19 @@ public class SkeletonBoss : Monster
             {
                 case 1:
                     animator.SetTrigger("Attack1");
-                    yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(2.3f);
                     break;
                 case 2:
                     animator.SetTrigger("Attack2");
-                    yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(2.2f);
                     break;
                 case 3:
                     animator.SetTrigger("Attack3");
-                    yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(2.1f);
                     break;
                 case 4:
                     animator.SetTrigger("Attack4");
-                    yield return new WaitForSeconds(1.5f);
+                    yield return new WaitForSeconds(2.2f);
                     break;
             }
             isSkillTurn = true;
@@ -233,9 +233,15 @@ public class SkeletonBoss : Monster
                     damage *= 2;
                 }
                 hittable.TakeHit(damage, gameObject, attackType);
+                StartCoroutine(HitTimerRoutine());
             }
-
         }
+    }
+
+    IEnumerator HitTimerRoutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        hitTable.Clear();
     }
 
     LayerMask targetMask;

@@ -25,7 +25,7 @@
     "resistance": 1,
     "strength": 1,
     "dexerity": 2,
-    "savedScene": "Scenes/DungeonMaps/Room_MainArea",
+    "savedScene": "Scenes/DungeonMaps/Room_BossArea",
     "savedSpawnPointIndex": 0,
     "inventory": [
         {
@@ -39,7 +39,7 @@
             "data": {
                 "instanceID": 24944
             },
-            "count": 4,
+            "count": 9,
             "name": "RedPotion"
         }
     ],
@@ -55,10 +55,10 @@
             "data": {
                 "instanceID": 24944
             },
-            "count": 4,
+            "count": 9,
             "name": "RedPotion"
         }
     ],
-    "quickItemIndex": 0,
-    "EXP": 170
+    "quickItemIndex": 1,
+    "EXP": 470
 }

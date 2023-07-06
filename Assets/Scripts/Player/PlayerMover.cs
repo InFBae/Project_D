@@ -131,7 +131,7 @@ public class PlayerMover : MonoBehaviour
         animator.SetLayerWeight(1, 0);
         rig.weight = 0f;
 
-        statusController.DecreaseSP(2);
+        statusController.DecreaseSP(20);
         while (curTime < landRollTime)
         {
             curTime += Time.deltaTime;

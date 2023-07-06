@@ -121,7 +121,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
         }
         else if (state == State.Die)
         {
-            mover.StopAllCoroutines();
+            mover.StopRoutines();
             attacker.StopAllCoroutines();
             hitter.StopAllCoroutines();
             //Destroy(gameObject, 5f);
@@ -132,6 +132,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
     // 0 이하라면 Idle
     private void OnMove(InputValue value)
     {
+        if (curState == State.Die) return;
         Vector2 input = value.Get<Vector2>();
         moveDir = new Vector3(input.x, 0, input.y);
         
@@ -147,6 +148,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
 
     private void OnRun(InputValue value)
     {
+        if (curState == State.Die) return;
         // Idle 이나 Walking 상태가 아니라면 상태를 변경하지 않는다.
         if (CurState > State.Running )
         {
@@ -171,6 +173,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
     // SP가 충분하다면 즉시 구르기
     private void OnLandRoll(InputValue value)
     {
+        if (curState == State.Die) return;
         if (CurState != State.Falling && 
             CurState != State.LandRolling &&
             statusController.GetCurrentSP() >= 2)
@@ -216,6 +219,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
 
     private void OnAttack(InputValue inputValue)
     {
+        if (curState == State.Die) return;
         if (statusController.GetCurrentSP() < 1.5f) return;
         if (animator.GetBool("StrongKey") && statusController.GetCurrentSP() >= 3f)
         {
