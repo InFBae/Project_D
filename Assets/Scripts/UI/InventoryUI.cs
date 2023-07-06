@@ -86,6 +86,7 @@ public class InventoryUI : BaseUI
         if (page > 0)
         {
             page--;
+            GameManager.Sound.Play("InventoryPage");
             UpdateUI();
         }
     }
@@ -93,6 +94,7 @@ public class InventoryUI : BaseUI
     public void OnNextButton()
     {
         page++;
+        GameManager.Sound.Play("InventoryPage");
         UpdateUI();
     }
 

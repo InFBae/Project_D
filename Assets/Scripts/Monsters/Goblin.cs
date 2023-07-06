@@ -9,6 +9,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 public class Goblin : Monster
 {
     [SerializeField] Collider attackCollider;
+    [SerializeField] Collider kinematicBody;
     public enum State { Idle, Trace, Attack, Return, TakeHit, Die, Size }
     StateMachine<State, Goblin> stateMachine;
 
@@ -79,6 +80,9 @@ public class Goblin : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
+        kinematicBody.enabled = false;
+
+        GameManager.Sound.Play("GoblinDie");       
 
         DropItem();
         GameManager.Data.CurEXP += 50;
@@ -127,8 +131,8 @@ public class Goblin : Monster
             skillAvailability[i] = true;
         }
         skillCoolTime = new float[4];
-        skillCoolTime[0] = 3;
-        skillCoolTime[1] = 8;
+        skillCoolTime[0] = 8;
+        skillCoolTime[1] = 3;
         skillCoolTime[2] = 3;
         skillCoolTime[3] = 5;
 
@@ -155,7 +159,11 @@ public class Goblin : Monster
         {
             attackType = IHittable.HitType.Weak;
             animator.SetTrigger("attack1");
-            yield return new WaitForSeconds(1.6f);
+            
+            yield return new WaitForSeconds(0.8f);
+            GameManager.Sound.Play("GoblinAttack");
+            yield return new WaitForSeconds(0.8f);
+
             skillAvailability[0] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[0], 0));
         }
@@ -163,7 +171,13 @@ public class Goblin : Monster
         {
             attackType = IHittable.HitType.Weak;
             animator.SetTrigger("attack2");
-            yield return new WaitForSeconds(2.66f);
+
+            yield return new WaitForSeconds(0.7f);
+            GameManager.Sound.Play("GoblinAttack");
+            yield return new WaitForSeconds(0.7f);
+            GameManager.Sound.Play("GoblinAttack");
+            yield return new WaitForSeconds(1.3f);
+
             skillAvailability[1] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[1], 1));
         }
@@ -171,7 +185,10 @@ public class Goblin : Monster
         {
             attackType = IHittable.HitType.Weak;
             animator.SetTrigger("attack3");
-            yield return new WaitForSeconds(2.2f);
+            yield return new WaitForSeconds(0.5f);
+            GameManager.Sound.Play("GoblinAttack");
+            yield return new WaitForSeconds(1.7f);
+
             skillAvailability[2] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[2], 2));
         }
@@ -179,7 +196,10 @@ public class Goblin : Monster
         {
             attackType = IHittable.HitType.Strong;
             animator.SetTrigger("attack4");        
-            yield return new WaitForSeconds(2.8f);
+            yield return new WaitForSeconds(1.4f);
+            GameManager.Sound.Play("GoblinAttack");
+            yield return new WaitForSeconds(1.4f);
+
             skillAvailability[3] = false;
             StartCoroutine(TimerRoutine(skillCoolTime[3], 3));
         }
@@ -246,6 +266,7 @@ public class Goblin : Monster
                     damage *= 2;
                 }
                 hittable.TakeHit(damage, gameObject, attackType);
+                GameManager.Sound.Play("GoblinAttackHit");
             }
                 
         }

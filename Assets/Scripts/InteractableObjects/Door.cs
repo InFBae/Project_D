@@ -16,6 +16,7 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        GameManager.Sound.Play("DoorOpen");
         GameManager.Scene.LoadScene(dest, start);
     }
 

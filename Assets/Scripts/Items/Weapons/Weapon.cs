@@ -34,6 +34,7 @@ public abstract class Weapon : MonoBehaviour
                 else 
                     damage = GetDamage();
                 hittable.TakeHit(damage, owner.gameObject, owner.attackType);
+                GameManager.Sound.Play("MetalWeaponHitSound");
             }
         }
     }

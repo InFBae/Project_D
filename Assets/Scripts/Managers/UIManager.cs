@@ -167,6 +167,7 @@ public class UIManager : MonoBehaviour
         CollectedItemSceneUI collectedItemSceneUI = GameManager.Resource.Instantiate<CollectedItemSceneUI>("UI/CollectedItemUI", true);
         //collectedItemSceneUI.transform.SetParent(windowCanvas.transform);
         collectedItemSceneUI.SetUI(item, count);
+        GameManager.Sound.Play("ItemFloatMessage");
         GameManager.Resource.Destroy(collectedItemSceneUI.gameObject, 3f);
     }
 

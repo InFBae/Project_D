@@ -4690,6 +4690,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   attackCollider: {fileID: 2028850600}
+  kinematicBody: {fileID: 4486285509824590292}
   spawnPoint: {fileID: 0}
 --- !u!1 &8128342469158003843
 GameObject:

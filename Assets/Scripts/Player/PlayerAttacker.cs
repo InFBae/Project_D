@@ -49,13 +49,15 @@ public class PlayerAttacker : MonoBehaviour
                 animator.SetBool("IsAttacking", true);
                 animator.SetBool("ContinuousAttack", false);
                 statusController.DecreaseSP(15f);
-
+                
                 // hitTable 초기화
                 hitTable.Clear();
                 curWeapon?.EnableCollider();
                 
                 // 공격 시간만큼 공격 실행
-                yield return new WaitForSeconds(attackTime);
+                yield return new WaitForSeconds(attackTime/2f);
+                PlayWeaponSwingSound();
+                yield return new WaitForSeconds(attackTime / 2f);
 
                 animator.SetBool("IsAttacking", false);
                 curWeapon?.DisableCollider();
@@ -102,6 +104,11 @@ public class PlayerAttacker : MonoBehaviour
             rig.weight = 1f;            
         }
         stateController.CurState = (PlayerStateController.State)stateController.IsMoving();
+    }
+
+    public void PlayWeaponSwingSound()
+    {
+        GameManager.Sound.Play("MetalWeaponSwing");
     }
 
 }

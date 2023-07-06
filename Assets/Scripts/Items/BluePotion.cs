@@ -13,6 +13,7 @@ public class BluePotion : Item, IUsable
     {
         if (count > 0)
         {
+            GameManager.Sound.Play("PotionDrink");
             GameManager.Data.IncreaseHP(50);
             count--;
             if (count == 0)

@@ -8,6 +8,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 public class Slime : Monster
 {
     [SerializeField] Collider attackCollider;
+    [SerializeField] Collider kinematicBody;
 
     public enum State { Idle, Trace, Return, TakeHit, Die, Size }
     StateMachine<State, Slime> stateMachine;
@@ -61,6 +62,9 @@ public class Slime : Monster
         animator.SetTrigger("die");
         rb.isKinematic = true;
         coll.enabled = false;
+        kinematicBody.enabled = false;
+
+        GameManager.Sound.Play("SlimeDie");
 
         DropItem();
         GameManager.Data.CurEXP += 10;

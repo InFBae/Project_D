@@ -14,6 +14,7 @@ public class RedPotion : Item, IUsable
     {
         if (count > 0)
         {
+            GameManager.Sound.Play("PotionDrink");
             GameManager.Data.IncreaseHP((GameManager.Data.PlayerStatusData.MaxHP / 2));
             count--;
             if (count == 0)

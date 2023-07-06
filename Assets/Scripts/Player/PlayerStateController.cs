@@ -291,12 +291,14 @@ public class PlayerStateController : MonoBehaviour, IHittable
     {
         CurState = State.Die;
         playerInput.enabled = false;
+        GameManager.Sound.Play("PlayerDie");
     }
 
     public void PopUpGameOverUI()
     {
         statusController.DIsableStatusSceneUI();
         Cursor.lockState = CursorLockMode.None;
+        GameManager.Sound.Play("GameOver");
         GameManager.UI.ShowPopUpUI<GameOverUI>("UI/GameOverUI");
     }
 

@@ -9,4 +9,5 @@ public class OHSword : Weapon
         weaponName = "OHSword";
         base.Awake();       
     }
+
 }

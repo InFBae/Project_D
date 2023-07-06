@@ -3,10 +3,10 @@
     "defaultSP": 100.0,
     "spRechargeTime": 1.5,
     "leftWeapon": {
-        "instanceID": 24978
+        "instanceID": 24982
     },
     "rightWeapon": {
-        "instanceID": 24924
+        "instanceID": 24928
     },
     "armorHead": {
         "instanceID": 0
@@ -21,44 +21,44 @@
         "instanceID": 0
     },
     "vitality": 1,
-    "endurance": 1,
+    "endurance": 3,
     "resistance": 1,
     "strength": 1,
-    "dexerity": 2,
+    "dexerity": 4,
     "savedScene": "Scenes/DungeonMaps/Room_BossArea",
     "savedSpawnPointIndex": 0,
     "inventory": [
         {
             "data": {
-                "instanceID": 24920
+                "instanceID": 24924
             },
-            "count": 1,
+            "count": 2,
             "name": "BluePotion"
         },
         {
             "data": {
-                "instanceID": 24944
+                "instanceID": 24948
             },
-            "count": 9,
+            "count": 7,
             "name": "RedPotion"
         }
     ],
     "quickItemList": [
         {
             "data": {
-                "instanceID": 24920
+                "instanceID": 24924
             },
-            "count": 1,
+            "count": 2,
             "name": "BluePotion"
         },
         {
             "data": {
-                "instanceID": 24944
+                "instanceID": 24948
             },
-            "count": 9,
+            "count": 7,
             "name": "RedPotion"
         }
     ],
     "quickItemIndex": 1,
-    "EXP": 470
+    "EXP": 580
 }

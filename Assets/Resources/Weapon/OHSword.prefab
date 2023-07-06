@@ -96,5 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc3d9f54b7c28524ab196157cf2eadaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: e3d45445a4db97446aacda8b59472df8, type: 2}
-  weaponName: OHSword
+  owner: {fileID: 0}

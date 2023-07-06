@@ -218,6 +218,7 @@ public class LevelUpPopUpUI : PopUpUI
         GameManager.Data.PlayerStatusData.strength = strengthCount;
         GameManager.Data.PlayerStatusData.dexerity = dexerityCount;
 
+        GameManager.Sound.Play("LevelUp");
         startEXP = GameManager.Data.CurEXP;
     }
 

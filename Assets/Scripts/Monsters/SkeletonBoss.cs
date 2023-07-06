@@ -69,6 +69,7 @@ public class SkeletonBoss : Monster
         rb.isKinematic = true;
         coll.enabled = false;
 
+        GameManager.Sound.Play("SkeletonBossDie");
         DropItem();
         GameManager.Data.CurEXP += 1000;
         GameManager.Pool.Release(gameObject, 5f);
@@ -122,6 +123,7 @@ public class SkeletonBoss : Monster
     public void PopUPGameClearUI()
     {
         Cursor.lockState = CursorLockMode.None;
+        GameManager.Sound.Play("GameClear");
         GameManager.UI.ShowPopUpUI<GameClearUI>("UI/GameClearUI");
     }
 
@@ -302,6 +304,12 @@ public class SkeletonBoss : Monster
         leftWeapon.enabled = false;
         rightWeapon.enabled = false;
     }
+
+    private void PlaySwingSound()
+    {
+        GameManager.Sound.Play("BossAttackSwing");
+    }
+
 
     #region SkeletonBossState
     private abstract class SkeletonBossState : StateBase<State, SkeletonBoss>
