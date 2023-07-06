@@ -57,6 +57,10 @@ public class PlayerHitter : MonoBehaviour
         }
 
         rig.weight = 1;
+        if (mover.moveRoutine != null)
+        {
+            mover.StopCoroutine(mover.moveRoutine);
+        }
         mover.moveRoutine = mover.StartCoroutine(mover.MoveRoutine());
 
         stateController.CurState = (PlayerStateController.State)stateController.IsMoving();        
