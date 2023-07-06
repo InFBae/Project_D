@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerStatusController : MonoBehaviour
@@ -8,91 +9,57 @@ public class PlayerStatusController : MonoBehaviour
     [SerializeField] private StatusInfoSceneUI statusInfoSceneUI;
     private PlayerStatusData statusData;
 
-    private const int HP = 0, SP = 1, DP = 2;
-
     private void Awake()
     {
-        statusData = GameManager.Resource.Load<PlayerStatusData>("Data/PlayerStatusData");
+        statusData = GameManager.Data.PlayerStatusData;
     }
 
     private void Start()
     {
-        maxHP = statusData.maxHP;
-        curHP = maxHP;
-        maxSP = statusData.maxSP;
-        curSP = maxSP;
         spRechargeTime = statusData.spRechargeTime;
-        curDP = statusData.DP;
 
         statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.sprite);
         statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.sprite);
-        if(statusData.quickItemList.Count > 0)
-        {
-            statusInfoSceneUI.SetQuickItem(statusData.quickItemList[statusData.quickItemIndex].Data.sprite);
-            statusInfoSceneUI.SetQuickItemCount(statusData.quickItemList[statusData.quickItemIndex].Count);
-        }
-        else
-        {
-            statusInfoSceneUI.SetQuickItem(null);
-            statusInfoSceneUI.SetQuickItemCount(0);
-        }
-        if(statusData.quickItemList.Count > 1)
-        {
-            statusInfoSceneUI.SetNextItem(statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite);
-        }
-        else
-        {
-            statusInfoSceneUI.SetNextItem(null);
-        }
+        statusInfoSceneUI.SetQuickSlot();
     }
 
     private void Update()
     {
         SPRechargeTime();
         SPRecover();
-        GaugeUpdate();
     }
 
-    private void GaugeUpdate()
-    {
-        statusInfoSceneUI.SetHP(curHP/maxHP);
-        statusInfoSceneUI.SetSP(curSP/maxSP);
-    }
 
     #region HP
-    private float maxHP;
-    private float curHP;
 
     public void IncreaseHP(float hp)
     {
-        if(curHP + hp < maxHP) { curHP += hp; }
-        else { curHP = maxHP; }
+        if(GameManager.Data.CurHP + hp < GameManager.Data.PlayerStatusData.MaxHP) { GameManager.Data.CurHP += hp; }
+        else { GameManager.Data.CurHP = GameManager.Data.PlayerStatusData.MaxHP; }
     }
 
     public void DecreaseHP(float hp)
     {
         float damage = hp;
 
-        if (curDP > 0) 
+        if (GameManager.Data.PlayerStatusData.DP > 0) 
         {
-            damage = (hp - curDP) > 0 ? hp - curDP : 0;
+            damage = (hp - GameManager.Data.PlayerStatusData.DP) > 0 ? hp - GameManager.Data.PlayerStatusData.DP : 0;
         }
-        curHP -= damage;
+        GameManager.Data.CurHP -= damage;
 
-        if(curHP <= 0)
+        if(GameManager.Data.CurHP <= 0)
         {
-            // TODO: GameOver;
+            PlayerStateController.OnPlayerDied?.Invoke();
         }
     }
 
     #endregion
 
     #region SP
-    private float maxSP;
-    private float curSP;
 
     // 스태미나 증가량
-    private float spIncreaseSpeed = 2;
+    private float spIncreaseSpeed = 20;
 
     // 스태미나 재회복 딜레이 시간
     private float spRechargeTime;
@@ -101,18 +68,17 @@ public class PlayerStatusController : MonoBehaviour
     // 스태미나 감소 여부
     private bool spUsed;
 
-
     public void DecreaseSP(float sp)
     {
         spUsed = true;
         currentSpRechargeTime = 0;
 
-        if (curSP - sp > 0)
+        if (GameManager.Data.CurSP - sp > 0)
         {
-            curSP -= sp;
+            GameManager.Data.CurSP -= sp;
         }
         else
-            curSP = 0;
+            GameManager.Data.CurSP = 0;
     }
 
     private void SPRechargeTime()
@@ -128,41 +94,19 @@ public class PlayerStatusController : MonoBehaviour
 
     private void SPRecover()
     {
-        if (!spUsed && curSP < maxSP)
+        if (!spUsed && GameManager.Data.CurSP < GameManager.Data.PlayerStatusData.MaxSP)
         {
-            if(curSP + spIncreaseSpeed * Time.deltaTime > maxSP)
+            if(GameManager.Data.CurSP + spIncreaseSpeed * Time.deltaTime > GameManager.Data.PlayerStatusData.MaxSP)
             {
-                curSP = maxSP;
+                GameManager.Data.CurSP = GameManager.Data.PlayerStatusData.MaxSP;
             }
-            else curSP += spIncreaseSpeed * Time.deltaTime;
+            else GameManager.Data.CurSP += spIncreaseSpeed * Time.deltaTime;
         }
     }
 
     public float GetCurrentSP()
     {
-        return curSP;
-    }
-
-    #endregion
-
-    #region DP
-    private float curDP;
-
-    public void IncreaseDP(float dp)
-    {
-        curDP += dp;
-    }
-
-    public void DecreaseDP(float dp)
-    {
-        if(curDP- dp > 0)
-        {
-            curDP -= dp;
-        }
-        else
-        {
-            curDP = 0;
-        }
+        return GameManager.Data.CurSP;
     }
 
     #endregion
@@ -180,13 +124,27 @@ public class PlayerStatusController : MonoBehaviour
             statusData.quickItemIndex = statusData.quickItemIndex - 1 < 0 ? statusData.quickItemList.Count - 1 : statusData.quickItemIndex - 1;            
         }
 
-        statusInfoSceneUI.SetQuickItem(statusData.quickItemList[statusData.quickItemIndex].Data.sprite);
-        statusInfoSceneUI.SetQuickItemCount(statusData.quickItemList[statusData.quickItemIndex].Count);
+        statusInfoSceneUI.SetQuickSlot();
+    }
 
-        if (statusData.quickItemList.Count > 1)
+    private void OnUseItem()
+    {
+        if (GameManager.Data.PlayerStatusData.quickItemList.Count > 0)
         {
-            statusInfoSceneUI.SetNextItem(statusData.quickItemList[(statusData.quickItemIndex + 1) % statusData.quickItemList.Count].Data.sprite);
-        }
+            int quickItemIndex = GameManager.Data.PlayerStatusData.quickItemIndex;
+            /*if (GameManager.Data.PlayerStatusData.inventory[quickItemIndex].Count == 1)
+            {
+                (GameManager.Data.PlayerStatusData.inventory[quickItemIndex] as IUsable).Use();
+
+            }*/
+            (GameManager.Data.PlayerStatusData.quickItemList[quickItemIndex] as IUsable).Use();
+            StatusInfoSceneUI.OnQuickSlotChanged?.Invoke();
+        }       
+    }
+
+    public void DIsableStatusSceneUI()
+    {
+        statusInfoSceneUI.enabled = false;
     }
 
 }

@@ -11,7 +11,7 @@ public class InventoryUI : BaseUI
     List<Image> inventoryImage;
     List<TMP_Text> inventoryCount;
 
-    private int page = 0;
+    public int page = 0;
     protected override void Awake()
     {
         base.Awake();
@@ -52,7 +52,6 @@ public class InventoryUI : BaseUI
     }
     public void UpdateUI()
     {
-
         for(int i = 0; i < inventoryImage.Count; i++)
         {
             int inventoryIndex = i + (page * inventoryImage.Count);   

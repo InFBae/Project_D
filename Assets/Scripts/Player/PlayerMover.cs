@@ -39,9 +39,7 @@ public class PlayerMover : MonoBehaviour
 
     public void StopRoutines()
     {
-        StopCoroutine(moveRoutine);
-        StopCoroutine(fallRoutine);
-        StopCoroutine(lookRoutine);
+        StopAllCoroutines();
     }
 
     public Coroutine moveRoutine;
@@ -54,12 +52,12 @@ public class PlayerMover : MonoBehaviour
                 animator.SetLayerWeight(1, 0);
                 rig.weight = 0f;
 
-                if (statusController.GetCurrentSP() < 1 * Time.deltaTime)
+                if (statusController.GetCurrentSP() < 10 * Time.deltaTime)
                 {
                     stateController.CurState = PlayerStateController.State.Walking;
                 }
 
-                statusController.DecreaseSP(1 * Time.deltaTime);
+                statusController.DecreaseSP(10 * Time.deltaTime);
                 controller.Move(transform.forward * stateController.MoveDir.z * runSpeed * Time.deltaTime);
                 controller.Move(transform.right * stateController.MoveDir.x * runSpeed * Time.deltaTime);
             }

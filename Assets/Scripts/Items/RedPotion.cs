@@ -6,6 +6,7 @@ public class RedPotion : Item, IUsable
 {
     public RedPotion()
     {
+        name = "RedPotion";
         data = GameManager.Resource.Load<ItemData>("Data/Items/RedPotionData");
     }   
 
@@ -13,8 +14,12 @@ public class RedPotion : Item, IUsable
     {
         if (count > 0)
         {
-            owner.IncreaseHP((GameManager.Data.PlayerStatusData.maxHP / 2));
+            GameManager.Data.IncreaseHP((GameManager.Data.PlayerStatusData.MaxHP / 2));
             count--;
+            if (count == 0)
+            {
+                GameManager.Data.PlayerStatusData.inventory.Remove(this);
+            }
         }
         
     }

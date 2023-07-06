@@ -11,10 +11,10 @@ public class CollectedItemSceneUI : SceneUI
         base.Awake();
     }
 
-    public void SetUI(Item item)
+    public void SetUI(Item item, int count)
     {
         images["CollectedItemIcon"].sprite = item.Data.sprite;
-        texts["CollectedItemCount"].text = item.Count.ToString();
+        texts["CollectedItemCount"].text = count.ToString();
         texts["CollectedItemName"].text = item.Data.itemName;
     }
 }

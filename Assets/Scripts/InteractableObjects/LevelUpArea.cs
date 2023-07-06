@@ -6,6 +6,8 @@ using UnityEngine.Events;
 public class LevelUpArea : MonoBehaviour, IInteractable
 {
     Canvas canvas;
+    [SerializeField] string curScene;
+    [SerializeField] int savePointIndex;
 
     private void Awake()
     {
@@ -30,7 +32,10 @@ public class LevelUpArea : MonoBehaviour, IInteractable
     public void Interact()
     {
         if (!LevelUpPopUpUI.IsOpened)
-            GameManager.UI.ShowPopUpUI<LevelUpPopUpUI>("UI/LevelUpPopUpUI");
-
+        {
+            LevelUpPopUpUI levelUpPopUpUI = GameManager.UI.ShowPopUpUI<LevelUpPopUpUI>("UI/LevelUpPopUpUI");
+            levelUpPopUpUI.curScene = curScene;
+            levelUpPopUpUI.spawnPointIndex = savePointIndex;
+        }           
     }
 }

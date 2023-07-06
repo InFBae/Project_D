@@ -24,6 +24,7 @@ public class MenuPopUpUI : PopUpUI
         buttons["SettingsButton"].onClick.AddListener(() => settingUI.transform.SetAsLastSibling());        
         buttons["ApplyButton"].onClick.AddListener(OnApplyButton);
         buttons["RevertButton"].onClick.AddListener(OnRevertButton);
+        buttons["ReturnTitleButton"].onClick.AddListener(OnReturnTitleButton);
     }
 
     private void OnEnable()
@@ -45,6 +46,11 @@ public class MenuPopUpUI : PopUpUI
     public void OnRevertButton()
     {
         CloseUI();
+    }
+
+    public void OnReturnTitleButton()
+    {
+        GameManager.Scene.LoadScene("GameTitleScene", "");
     }
 
 }

@@ -5,47 +5,43 @@ using UnityEngine;
 public class CorridorKitchenScene : BaseScene
 {
     [SerializeField] List<Transform> spawnPoints;
+    [SerializeField] List<Transform> savePoints;
     [SerializeField] GameObject player;
     protected override IEnumerator LoadingRoutine(string exScene)
     {
+        // UI 로딩
+        GameManager.UI.SceneLoadInit();
+        GameManager.Pool.SceneLoadInit();
+        progress = 0.5f;
+        yield return null;
+
         // 플레이어 위치 이동
+        player.SetActive(false);
+
         if (exScene == "GameTitleScene")
         {
-            if (GameManager.Data.PlayerStatusData.savedSpawnPoint == null)
+            if (savePoints == null)
             {
-                GameManager.Data.PlayerTransform = spawnPoints[0];
+                player.transform.position = spawnPoints[0].position;
             }
             else
             {
-                GameManager.Data.PlayerTransform = GameManager.Data.PlayerStatusData.savedSpawnPoint;
+                player.transform.position = savePoints[GameManager.Data.PlayerStatusData.savedSpawnPointIndex].position;
             }
         }
         else if (exScene == "Scenes/DungeonMaps/Room_Library")
         {
-            GameManager.Data.PlayerTransform = spawnPoints[0];
+            player.transform.position = spawnPoints[0].position;
         }
         else if (exScene == "Scenes/DungeonMaps/Room_Kitchen")
         {
-            GameManager.Data.PlayerTransform = spawnPoints[1];
+            player.transform.position = spawnPoints[1].position;
         }
 
-        player.SetActive(false);
-
-        player.transform.position = GameManager.Data.PlayerTransform.position;
-
         player.SetActive(true);
-
-
-        progress = 0.5f;
-        yield return null;
-        // 씬의 몬스터 리스폰
 
         progress = 1f;
 
     }
 
-    private void OnDestroy()
-    {
-        // TODO 모든 몬스터 삭제
-    }
 }

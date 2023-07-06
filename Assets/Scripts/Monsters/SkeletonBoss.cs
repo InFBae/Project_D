@@ -118,6 +118,14 @@ public class SkeletonBoss : Monster
         skillCoolTime[1] = 8;
         skillCoolTime[2] = 8;
     }
+
+    public void PopUPGameClearUI()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        GameManager.UI.ShowPopUpUI<GameClearUI>("UI/GameClearUI");
+    }
+
+
     private bool isSkillTurn = true;
     Coroutine attackRoutine;
     IEnumerator AttackRoutine()

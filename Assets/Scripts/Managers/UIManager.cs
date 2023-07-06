@@ -36,6 +36,24 @@ public class UIManager : MonoBehaviour
         inGameCanvas.sortingOrder = 0;
     }
 
+    public void SceneLoadInit()
+    {
+        popUpCanvas = GameManager.Resource.Instantiate<Canvas>("UI/Canvas");
+        popUpCanvas.gameObject.name = "PopUpCanvas";
+        popUpCanvas.sortingOrder = 100;
+        popUpStack = new Stack<PopUpUI>();
+
+        windowCanvas = GameManager.Resource.Instantiate<Canvas>("UI/Canvas");
+        windowCanvas.gameObject.name = "WindowCanvas";
+        windowCanvas.sortingOrder = 10;
+
+        // gameSceneCanvas.sortingOrder = 1;
+
+        inGameCanvas = GameManager.Resource.Instantiate<Canvas>("UI/Canvas");
+        inGameCanvas.gameObject.name = "InGameCanvas";
+        inGameCanvas.sortingOrder = 0;
+    }
+
     public T ShowPopUpUI<T>(T popUpUI) where T : PopUpUI
     {
         if (popUpStack.Count > 0)
@@ -148,7 +166,7 @@ public class UIManager : MonoBehaviour
     {
         CollectedItemSceneUI collectedItemSceneUI = GameManager.Resource.Instantiate<CollectedItemSceneUI>("UI/CollectedItemUI", true);
         //collectedItemSceneUI.transform.SetParent(windowCanvas.transform);
-        collectedItemSceneUI.SetUI(item);
+        collectedItemSceneUI.SetUI(item, count);
         GameManager.Resource.Destroy(collectedItemSceneUI.gameObject, 3f);
     }
 

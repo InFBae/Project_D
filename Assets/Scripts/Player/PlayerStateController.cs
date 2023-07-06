@@ -12,6 +12,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
     public Vector3 MoveDir { get { return moveDir; } }
 
     public UnityAction<State> OnStateChanged;
+    public static UnityAction OnPlayerDied;
     public IHittable.HitType attackType;
 
     [SerializeField] private State curState;
@@ -46,6 +47,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
         mover.StartRoutines();
         OnStateChanged += ChangeState;
         OnStateChanged += SetPlayerState;
+        OnPlayerDied += Die;
     }
 
     private void OnDisable()
@@ -53,6 +55,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
         mover.StopRoutines();
         OnStateChanged -= ChangeState;
         OnStateChanged -= SetPlayerState;
+        OnPlayerDied -= Die;
     }
 
     private void Update()
@@ -61,7 +64,6 @@ public class PlayerStateController : MonoBehaviour, IHittable
         GroundCheck();
         MovingCheck();
         CheckOnUI();
-        
     }
 
     private void SetPlayerState(State state)
@@ -116,6 +118,13 @@ public class PlayerStateController : MonoBehaviour, IHittable
             if (hitter.hitRoutine != null)
                 hitter.StopCoroutine(hitter.hitRoutine);
             hitter.hitRoutine = hitter.StartCoroutine(hitter.HitRoutine(hitDamage, hitType));
+        }
+        else if (state == State.Die)
+        {
+            mover.StopAllCoroutines();
+            attacker.StopAllCoroutines();
+            hitter.StopAllCoroutines();
+            //Destroy(gameObject, 5f);
         }
     }
 
@@ -263,6 +272,7 @@ public class PlayerStateController : MonoBehaviour, IHittable
 
         hitDamage = damage;
         this.hitType = hitType;
+
         if (CurState == State.Blocking)
         {
             CurState = State.BlockHit;
@@ -275,12 +285,21 @@ public class PlayerStateController : MonoBehaviour, IHittable
 
     public void Die()
     {
+        CurState = State.Die;
         playerInput.enabled = false;
+    }
 
+    public void PopUpGameOverUI()
+    {
+        statusController.DIsableStatusSceneUI();
+        Cursor.lockState = CursorLockMode.None;
+        GameManager.UI.ShowPopUpUI<GameOverUI>("UI/GameOverUI");
     }
 
     public void CheckOnUI()
     {
+        if (CurState == State.Die) { return; }
+
         if (EventSystem.current.IsPointerOverGameObject())
         {
             playerInput.enabled = false;
