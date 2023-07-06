@@ -32,14 +32,14 @@
             "data": {
                 "instanceID": 24920
             },
-            "count": 2,
+            "count": 1,
             "name": "BluePotion"
         },
         {
             "data": {
                 "instanceID": 24944
             },
-            "count": 1,
+            "count": 4,
             "name": "RedPotion"
         }
     ],
@@ -48,17 +48,17 @@
             "data": {
                 "instanceID": 24920
             },
-            "count": 2,
+            "count": 1,
             "name": "BluePotion"
         },
         {
             "data": {
                 "instanceID": 24944
             },
-            "count": 1,
+            "count": 4,
             "name": "RedPotion"
         }
     ],
     "quickItemIndex": 0,
-    "EXP": 20
+    "EXP": 170
 }
