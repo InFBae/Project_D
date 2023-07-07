@@ -21,7 +21,7 @@
         "instanceID": 0
     },
     "vitality": 1,
-    "endurance": 1,
+    "endurance": 2,
     "resistance": 1,
     "strength": 4,
     "dexerity": 1,
@@ -30,35 +30,21 @@
     "inventory": [
         {
             "data": {
-                "instanceID": 34434
-            },
-            "count": 2,
-            "name": "BluePotion"
-        },
-        {
-            "data": {
                 "instanceID": 34470
             },
-            "count": 6,
+            "count": 7,
             "name": "RedPotion"
         }
     ],
     "quickItemList": [
         {
             "data": {
-                "instanceID": 34434
-            },
-            "count": 2,
-            "name": "BluePotion"
-        },
-        {
-            "data": {
                 "instanceID": 34470
             },
-            "count": 6,
+            "count": 7,
             "name": "RedPotion"
         }
     ],
-    "quickItemIndex": 1,
-    "EXP": 70
+    "quickItemIndex": 0,
+    "EXP": 20
 }
