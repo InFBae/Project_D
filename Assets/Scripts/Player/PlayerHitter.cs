@@ -49,6 +49,7 @@ public class PlayerHitter : MonoBehaviour
 
         currentTime = 0;
         animator.SetTrigger("TakeHit");
+        GameManager.Sound.Play("PlayerHit");
         while (currentTime < hitTime)
         {
             currentTime += Time.deltaTime;

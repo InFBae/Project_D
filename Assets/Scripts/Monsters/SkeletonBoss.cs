@@ -69,6 +69,8 @@ public class SkeletonBoss : Monster
         rb.isKinematic = true;
         coll.enabled = false;
 
+        GameManager.Sound.Clear();
+        GameManager.Sound.Play("SkeletonBossDie");
         DropItem();
         GameManager.Data.CurEXP += 1000;
         GameManager.Pool.Release(gameObject, 5f);
@@ -122,6 +124,7 @@ public class SkeletonBoss : Monster
     public void PopUPGameClearUI()
     {
         Cursor.lockState = CursorLockMode.None;
+        GameManager.Sound.Play("GameClear");
         GameManager.UI.ShowPopUpUI<GameClearUI>("UI/GameClearUI");
     }
 
@@ -303,6 +306,12 @@ public class SkeletonBoss : Monster
         rightWeapon.enabled = false;
     }
 
+    private void PlaySwingSound()
+    {
+        GameManager.Sound.Play("BossAttackSwing");
+    }
+
+
     #region SkeletonBossState
     private abstract class SkeletonBossState : StateBase<State, SkeletonBoss>
     {
@@ -316,8 +325,13 @@ public class SkeletonBoss : Monster
         {
             owner.animator.SetInteger("CurState", 0);
             owner.canvas.enabled = false;
+            GameManager.Sound.Play("DefaultBGM", SoundManager.Sound.BGM);
         }
-        public override void Exit() { }
+        public override void Exit() 
+        {
+            owner.canvas.enabled = true;
+            GameManager.Sound.Play("SkeletonBossBGM", SoundManager.Sound.BGM);
+        }
         public override void Setup() { }
         public override void Transition()
         {
@@ -338,7 +352,7 @@ public class SkeletonBoss : Monster
         public override void Enter()
         {
             owner.animator.SetInteger("CurState", 1);
-            owner.canvas.enabled = true;
+
             if (owner.traceRoutine != null)
                 owner.StopCoroutine(owner.traceRoutine);
             owner.traceRoutine = owner.StartCoroutine(owner.TraceRoutine());

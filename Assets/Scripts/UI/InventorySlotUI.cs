@@ -24,6 +24,7 @@ public class InventorySlotUI : WindowUI
         if (item is IUsable && item.Count > 0)
         {
             (item as IUsable).Use();
+            StatusInfoSceneUI.OnQuickSlotChanged();
         }
         owner.UpdateUI();
         CloseUI();

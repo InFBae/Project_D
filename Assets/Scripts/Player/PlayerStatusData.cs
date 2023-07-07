@@ -10,12 +10,12 @@ public class PlayerStatusData : ISerializationCallbackReceiver
         get 
         {
             float damage = 0;
-            damage += rightWeapon.damage;
-            if ((rightWeapon.weaponType & WeaponData.WeaponType.Strength) > 0)
+            damage += rightWeapon.Data.damage;
+            if ((rightWeapon.Data.weaponType & WeaponData.WeaponType.Strength) > 0)
             {
                 damage += strength;
             }
-            if (((rightWeapon.weaponType & WeaponData.WeaponType.Agility) > 0))
+            if (((rightWeapon.Data.weaponType & WeaponData.WeaponType.Agility) > 0))
             {
                 damage += (dexerity * 1.5f);
             }
@@ -35,8 +35,8 @@ public class PlayerStatusData : ISerializationCallbackReceiver
     public float MaxHP { get { return defaultHP + vitality * 10; } }
     public float MaxSP { get { return defaultSP + endurance * 10; } }
 
-    public WeaponData leftWeapon;
-    public WeaponData rightWeapon;
+    public Weapon leftWeapon;
+    public Weapon rightWeapon;
 
     public ArmorData armorHead;
     public ArmorData armorHand;

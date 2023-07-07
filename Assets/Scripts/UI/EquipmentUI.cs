@@ -79,8 +79,8 @@ public class EquipmentUI : BaseUI
         if (statusData.leftWeapon != null)
         {
             images["WeaponLeftIcon"].color = Color.white;
-            images["WeaponLeftIcon"].sprite = statusData.leftWeapon.sprite;
-            texts["WeaponLeftText"].text = statusData.leftWeapon.instruction;
+            images["WeaponLeftIcon"].sprite = statusData.leftWeapon.Data.sprite;
+            texts["WeaponLeftText"].text = statusData.leftWeapon.Data.instruction;
         }
         else
         {
@@ -92,8 +92,8 @@ public class EquipmentUI : BaseUI
         if (statusData.rightWeapon != null)
         {
             images["WeaponRightIcon"].color = Color.white;
-            images["WeaponRightIcon"].sprite = statusData.rightWeapon.sprite;
-            texts["WeaponRightText"].text = statusData.rightWeapon.instruction;
+            images["WeaponRightIcon"].sprite = statusData.rightWeapon.Data.sprite;
+            texts["WeaponRightText"].text = statusData.rightWeapon.Data.instruction;
         }
         else
         {

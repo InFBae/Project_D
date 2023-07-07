@@ -18,8 +18,8 @@ public class PlayerStatusController : MonoBehaviour
     {
         spRechargeTime = statusData.spRechargeTime;
 
-        statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.sprite);
-        statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.sprite);
+        statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.Data.sprite);
+        statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.Data.sprite);
         statusInfoSceneUI.SetQuickSlot();
     }
 
@@ -131,7 +131,7 @@ public class PlayerStatusController : MonoBehaviour
     {
         if (GameManager.Data.PlayerStatusData.quickItemList.Count > 0)
         {
-            int quickItemIndex = GameManager.Data.PlayerStatusData.quickItemIndex;
+            int quickItemIndex = GameManager.Data.PlayerStatusData.quickItemIndex % GameManager.Data.PlayerStatusData.quickItemList.Count;
             /*if (GameManager.Data.PlayerStatusData.inventory[quickItemIndex].Count == 1)
             {
                 (GameManager.Data.PlayerStatusData.inventory[quickItemIndex] as IUsable).Use();

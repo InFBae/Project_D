@@ -12,6 +12,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float runSpeed;
     [SerializeField] private float rollDistance;
     [SerializeField] Transform lookPoint;
+    AudioSource audioSource;
 
     private CharacterController controller;
     private Animator animator;
@@ -28,6 +29,7 @@ public class PlayerMover : MonoBehaviour
         rig = GetComponentInChildren<Rig>();
         statusController = GetComponent<PlayerStatusController>();
         stateController = GetComponent<PlayerStateController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void StartRoutines()
@@ -47,6 +49,8 @@ public class PlayerMover : MonoBehaviour
     {
         while (true)
         {
+            if (!audioSource.isPlaying && stateController.MoveDir.magnitude > 0)
+                audioSource.Play();
             if (stateController.CurState == PlayerStateController.State.Running)
             {
                 animator.SetLayerWeight(1, 0);
@@ -56,7 +60,7 @@ public class PlayerMover : MonoBehaviour
                 {
                     stateController.CurState = PlayerStateController.State.Walking;
                 }
-
+                audioSource.pitch = 1.5f;
                 statusController.DecreaseSP(10 * Time.deltaTime);
                 controller.Move(transform.forward * stateController.MoveDir.z * runSpeed * Time.deltaTime);
                 controller.Move(transform.right * stateController.MoveDir.x * runSpeed * Time.deltaTime);
@@ -66,6 +70,7 @@ public class PlayerMover : MonoBehaviour
                 stateController.CurState == PlayerStateController.State.Blocking)
             {
                 rig.weight = 1f;
+                audioSource.pitch = 1f;
                 controller.Move(transform.forward * stateController.MoveDir.z * walkSpeed * Time.deltaTime);
                 controller.Move(transform.right * stateController.MoveDir.x * walkSpeed * Time.deltaTime);
             }

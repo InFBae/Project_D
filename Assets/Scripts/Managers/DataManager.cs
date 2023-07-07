@@ -9,6 +9,7 @@ public class DataManager : MonoBehaviour
     private PlayerStatusData playerStatusData;
     private Transform playerTransform;
     string path;
+    string soundSettingSavePath;
 
     private int curEXP;
     private float curHP;
@@ -33,7 +34,9 @@ public class DataManager : MonoBehaviour
     {
         playerStatusData = new PlayerStatusData();
         path = Path.Combine(Application.dataPath, "saveData.json");
-        LoadData();
+        soundSettingSavePath = Path.Combine(Application.dataPath, "soundSettingSaveData.json");
+        //LoadData();
+        LoadSoundSetting();
     }
 
     public void IncreaseHP(float hp)
@@ -123,7 +126,9 @@ public class DataManager : MonoBehaviour
                 playerStatusData.spRechargeTime = playerSavedData.spRechargeTime;
 
                 playerStatusData.leftWeapon = playerSavedData.leftWeapon;
+                playerStatusData.leftWeapon.SetData();
                 playerStatusData.rightWeapon = playerSavedData.rightWeapon;
+                playerStatusData.rightWeapon.SetData();
 
                 playerStatusData.vitality = playerSavedData.vitality;
                 playerStatusData.endurance = playerSavedData.endurance;
@@ -143,12 +148,14 @@ public class DataManager : MonoBehaviour
                         {
                             RedPotion redPotion = new RedPotion();
                             redPotion.SetCount(item.count);
+                            redPotion.SetData(redPotion.Data.itemName);
                             playerStatusData.inventory.Add(redPotion);
                         }
                         else if (item.name == "BluePotion")
                         {
                             BluePotion bluePotion = new BluePotion();
                             bluePotion.SetCount(item.count);
+                            bluePotion.SetData(bluePotion.Data.itemName);
                             playerStatusData.inventory.Add(bluePotion);
                         }
                     }
@@ -185,8 +192,8 @@ public class DataManager : MonoBehaviour
         playerStatusData.defaultSP = 100;
         playerStatusData.spRechargeTime = 1.5f;
 
-        playerStatusData.leftWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/Shield");
-        playerStatusData.rightWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/OHSword");
+        playerStatusData.leftWeapon = GameManager.Resource.Load<Weapon>("Weapon/Shield");
+        playerStatusData.rightWeapon = GameManager.Resource.Load<Weapon>("Weapon/OHSword");
 
         playerStatusData.vitality = 1;
         playerStatusData.endurance = 1;
@@ -204,5 +211,38 @@ public class DataManager : MonoBehaviour
         CurEXP = 0;
 
         SaveData();
+    }
+
+    public void SaveSoundSetting()
+    {
+        SoundSetting soundSetting = new SoundSetting();
+        soundSetting.masterVolume = GameManager.Sound.GetAudioVolume("Master");
+        soundSetting.bgmVolume = GameManager.Sound.GetAudioVolume("BGM");
+        soundSetting.effectVolume = GameManager.Sound.GetAudioVolume("Effect");
+        
+        string json = JsonUtility.ToJson(soundSetting);
+
+        File.WriteAllText(soundSettingSavePath, json);
+    }
+
+    public void LoadSoundSetting()
+    {
+        SoundSetting soundSetting = new SoundSetting();
+
+        if (!File.Exists(soundSettingSavePath))
+        {
+            GameManager.Sound.SetAudioVolume("Master", 0);
+            GameManager.Sound.SetAudioVolume("BGM", -20);
+            GameManager.Sound.SetAudioVolume("Effect", 0);
+        }
+        else
+        {
+            string loadJson = File.ReadAllText(soundSettingSavePath);
+            soundSetting = JsonUtility.FromJson<SoundSetting>(loadJson);
+
+            GameManager.Sound.SetAudioVolume("Master", soundSetting.masterVolume);
+            GameManager.Sound.SetAudioVolume("BGM", soundSetting.bgmVolume);
+            GameManager.Sound.SetAudioVolume("Effect", soundSetting.effectVolume);
+        }
     }
 }

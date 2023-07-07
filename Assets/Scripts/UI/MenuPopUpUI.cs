@@ -21,9 +21,9 @@ public class MenuPopUpUI : PopUpUI
         buttons["EquipmentsButton"].onClick.AddListener(()=> equipmentUI.transform.SetAsLastSibling());
         buttons["InventoryButton"].onClick.AddListener(() => inventoryUI.transform.SetAsLastSibling());
         buttons["StatsButton"].onClick.AddListener(() => statsUI.transform.SetAsLastSibling());
-        buttons["SettingsButton"].onClick.AddListener(() => settingUI.transform.SetAsLastSibling());        
-        buttons["ApplyButton"].onClick.AddListener(OnApplyButton);
-        buttons["RevertButton"].onClick.AddListener(OnRevertButton);
+        buttons["SettingsButton"].onClick.AddListener(() => settingUI.transform.SetAsLastSibling());
+
+        buttons["CloseButton"].onClick.AddListener(() => CloseUI());
         buttons["ReturnTitleButton"].onClick.AddListener(OnReturnTitleButton);
     }
 
@@ -36,16 +36,6 @@ public class MenuPopUpUI : PopUpUI
     {
         isOpened = false;
         Cursor.lockState = CursorLockMode.Locked;
-    }
-
-    public void OnApplyButton()
-    {      
-        CloseUI();
-    }
-    
-    public void OnRevertButton()
-    {
-        CloseUI();
     }
 
     public void OnReturnTitleButton()

@@ -889,6 +889,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   attackCollider: {fileID: 1238631123}
+  kinematicBody: {fileID: 7497135832653851459}
   isAttacking: 0
 --- !u!65 &2393590068115920806
 BoxCollider:

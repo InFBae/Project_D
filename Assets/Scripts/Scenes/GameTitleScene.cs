@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameTitleScene : BaseScene
 {
+    private void Awake()
+    {
+        GameManager.Sound.Play("DefaultBGM", SoundManager.Sound.BGM);
+    }
     protected override IEnumerator LoadingRoutine(string exScene)
     {
         // UI ·Îµù
