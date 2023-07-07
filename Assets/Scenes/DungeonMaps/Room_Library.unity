@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 3ec933eac99b7d248a1734f4ff407b7b, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -5991,6 +5991,7 @@ MonoBehaviour:
   - {fileID: 1566093323}
   - {fileID: 380605992}
   - {fileID: 510675174}
+  savePoints: []
   player: {fileID: 2005920542}
 --- !u!4 &155101398
 Transform:

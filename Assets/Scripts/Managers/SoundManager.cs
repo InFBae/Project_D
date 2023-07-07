@@ -107,6 +107,11 @@ public class SoundManager : MonoBehaviour
         return audioClip;
     }
 
+    public void Stop(Sound type)
+    {
+        audioSources[(int)type].Stop();
+    }
+
     public void SetAudioVolume(string type, float value)
     {
         audioMixer.SetFloat(type, value);
