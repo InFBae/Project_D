@@ -36,6 +36,7 @@ public class CorridorBossAreaScene : BaseScene
         else if (exScene == "Scenes/DungeonMaps/Room_BossArea")
         {
             player.transform.position = spawnPoints[1].position;
+            GameManager.Sound.Play("DefaultBGM", SoundManager.Sound.BGM);
         }
 
         player.SetActive(true);
