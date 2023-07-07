@@ -22,6 +22,5 @@ public class RedPotion : Item, IUsable
                 GameManager.Data.PlayerStatusData.inventory.Remove(this);
             }
         }
-        
     }
 }

@@ -1,13 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Weapon : MonoBehaviour
+[Serializable]
+public class Weapon : MonoBehaviour
 {
     protected WeaponData weaponData;
-    protected string weaponName;
+    public string weaponName;
     protected Collider coll;
     public Dictionary<IHittable, float> hitTable;
+
+    public WeaponData Data { get { return weaponData; } }
 
     public PlayerStateController owner;
 
@@ -68,5 +72,10 @@ public abstract class Weapon : MonoBehaviour
         {
             coll.enabled = false;
         }
+    }
+
+    public void SetData()
+    {
+        weaponData = GameManager.Resource.Load<WeaponData>($"Data/Weapons/{weaponName}");
     }
 }

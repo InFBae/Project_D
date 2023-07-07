@@ -3378,7 +3378,7 @@ AudioSource:
   m_GameObject: {fileID: 4258858134412639614}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 5757297539094064972, guid: f523da8f5d669d44a8c891390edd4da8, type: 2}
   m_audioClip: {fileID: 8300000, guid: b2eea60cb2c8ed34a9ea6e41f0fed12f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -3710,6 +3710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc3d9f54b7c28524ab196157cf2eadaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponName: 
   owner: {fileID: 0}
 --- !u!4 &1474286056789440803 stripped
 Transform:

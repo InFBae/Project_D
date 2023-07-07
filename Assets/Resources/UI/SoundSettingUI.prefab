@@ -238,7 +238,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2657109615646665258}
   m_Layer: 5
-  m_Name: 'EffectSoundSetting '
+  m_Name: 'EffectVolumeSetting '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -579,9 +579,9 @@ GameObject:
   - component: {fileID: 2657109616019397982}
   - component: {fileID: 2657109616019397968}
   - component: {fileID: 2657109616019397969}
-  - component: {fileID: 679265114028464049}
+  - component: {fileID: 7070325338828959251}
   m_Layer: 5
-  m_Name: SettingUI
+  m_Name: SoundSettingUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -648,7 +648,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &679265114028464049
+--- !u!114 &7070325338828959251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -657,7 +657,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2657109616019397983}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4e54f28d966d5d40aa1a572468af544, type: 3}
+  m_Script: {fileID: 11500000, guid: b55db63dca31aea4db339539e22eb365, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2657109616097103445
@@ -746,7 +746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2657109616105232740}
   m_Layer: 5
-  m_Name: EffectSoundIcon
+  m_Name: EffectVolumeIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -898,7 +898,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2657109616458779441}
   m_Layer: 5
-  m_Name: MasterSoundSetting
+  m_Name: MasterVolumeSetting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1049,7 +1049,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2657109616634399563}
   m_Layer: 5
-  m_Name: MusicSoundIcon
+  m_Name: BGMVolumeIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1089,7 +1089,7 @@ GameObject:
   - component: {fileID: 2657109616694029936}
   - component: {fileID: 2657109616694029939}
   m_Layer: 5
-  m_Name: MasterSoundSlider
+  m_Name: MasterVolumeSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1162,10 +1162,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 2657109615364888908}
   m_HandleRect: {fileID: 2657109617440662311}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -80
+  m_MaxValue: 20
   m_WholeNumbers: 0
-  m_Value: 0.549
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1179,7 +1179,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2657109616757947712}
   m_Layer: 5
-  m_Name: MusicSoundSetting
+  m_Name: BGMVolumeSetting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1406,7 +1406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2657109616880902046}
   m_Layer: 5
-  m_Name: MasterSoundIcon
+  m_Name: MasterVolumeIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1711,7 +1711,7 @@ GameObject:
   - component: {fileID: 2657109617336249377}
   - component: {fileID: 2657109617336249376}
   m_Layer: 5
-  m_Name: MusicSoundSlider
+  m_Name: BGMVolumeSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1784,10 +1784,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 2657109616620397034}
   m_HandleRect: {fileID: 2657109617357062468}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -80
+  m_MaxValue: 20
   m_WholeNumbers: 0
-  m_Value: 0.549
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1954,7 +1954,7 @@ GameObject:
   - component: {fileID: 2657109617387156043}
   - component: {fileID: 2657109617387156042}
   m_Layer: 5
-  m_Name: EffectSoundSlider
+  m_Name: EffectVolumeSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2027,10 +2027,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 2657109616251925935}
   m_HandleRect: {fileID: 2657109617059844552}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: -80
+  m_MaxValue: 20
   m_WholeNumbers: 0
-  m_Value: 0.549
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

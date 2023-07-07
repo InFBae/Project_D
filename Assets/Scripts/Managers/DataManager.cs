@@ -33,7 +33,7 @@ public class DataManager : MonoBehaviour
     {
         playerStatusData = new PlayerStatusData();
         path = Path.Combine(Application.dataPath, "saveData.json");
-        LoadData();
+        //LoadData();
     }
 
     public void IncreaseHP(float hp)
@@ -123,7 +123,9 @@ public class DataManager : MonoBehaviour
                 playerStatusData.spRechargeTime = playerSavedData.spRechargeTime;
 
                 playerStatusData.leftWeapon = playerSavedData.leftWeapon;
+                playerStatusData.leftWeapon.SetData();
                 playerStatusData.rightWeapon = playerSavedData.rightWeapon;
+                playerStatusData.rightWeapon.SetData();
 
                 playerStatusData.vitality = playerSavedData.vitality;
                 playerStatusData.endurance = playerSavedData.endurance;
@@ -143,12 +145,14 @@ public class DataManager : MonoBehaviour
                         {
                             RedPotion redPotion = new RedPotion();
                             redPotion.SetCount(item.count);
+                            redPotion.SetData(redPotion.Data.itemName);
                             playerStatusData.inventory.Add(redPotion);
                         }
                         else if (item.name == "BluePotion")
                         {
                             BluePotion bluePotion = new BluePotion();
                             bluePotion.SetCount(item.count);
+                            bluePotion.SetData(bluePotion.Data.itemName);
                             playerStatusData.inventory.Add(bluePotion);
                         }
                     }
@@ -185,8 +189,8 @@ public class DataManager : MonoBehaviour
         playerStatusData.defaultSP = 100;
         playerStatusData.spRechargeTime = 1.5f;
 
-        playerStatusData.leftWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/Shield");
-        playerStatusData.rightWeapon = GameManager.Resource.Load<WeaponData>("Data/Weapons/OHSword");
+        playerStatusData.leftWeapon = GameManager.Resource.Load<Weapon>("Weapon/Shield");
+        playerStatusData.rightWeapon = GameManager.Resource.Load<Weapon>("Weapon/OHSword");
 
         playerStatusData.vitality = 1;
         playerStatusData.endurance = 1;

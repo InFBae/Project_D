@@ -1,13 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SoundManager : MonoBehaviour
 {
-    public enum Sound { BGM, Effect, Size}
+    public enum Sound { Master, BGM, Effect, Size}
 
     AudioSource[] audioSources = new AudioSource[(int)Sound.Size];
     Dictionary<string, AudioClip> audioClips = new Dictionary<string, AudioClip>();
+
+    AudioMixer audioMixer;
+    AudioMixerGroup[] audioMixerGroup;
 
     private void Awake()
     {
@@ -16,6 +20,9 @@ public class SoundManager : MonoBehaviour
 
     public void Init()
     {
+        audioMixer = GameManager.Resource.Load<AudioMixer>("Sound/MyMixer");
+        audioMixerGroup = audioMixer.FindMatchingGroups("Master");
+
         GameObject root = GameObject.Find("@Sound");
         if (root == null)
         {
@@ -23,11 +30,12 @@ public class SoundManager : MonoBehaviour
             Object.DontDestroyOnLoad(root);
 
             string[] soundName = System.Enum.GetNames(typeof(Sound)); // BGM, Effect
-            for (int i = 0; i < soundName.Length - 1; i++)
+            for (int i = 1; i < soundName.Length - 1; i++)
             {
                 GameObject go = new GameObject { name = soundName[i] };
                 audioSources[i] = go.AddComponent<AudioSource>();
                 go.transform.SetParent(root.transform);
+                go.GetComponent<AudioSource>().outputAudioMixerGroup = audioMixerGroup[i];
             }
 
             audioSources[(int)Sound.BGM].loop = true;
@@ -97,6 +105,18 @@ public class SoundManager : MonoBehaviour
             Debug.Log($"AudioClip Missing ! {path}");
 
         return audioClip;
+    }
+
+    public void SetAudioVolume(string type, float value)
+    {
+        audioMixer.SetFloat(type, value);
+    }
+
+    public float GetAudioVolume(string type)
+    {
+        float value;
+        audioMixer.GetFloat(type, out value);
+        return value;
     }
 }
 

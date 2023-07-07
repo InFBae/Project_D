@@ -18,8 +18,8 @@ public class PlayerStatusController : MonoBehaviour
     {
         spRechargeTime = statusData.spRechargeTime;
 
-        statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.sprite);
-        statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.sprite);
+        statusInfoSceneUI.SetLeftWeapon(statusData.leftWeapon.Data.sprite);
+        statusInfoSceneUI.SetRightWeapon(statusData.rightWeapon.Data.sprite);
         statusInfoSceneUI.SetQuickSlot();
     }
 
