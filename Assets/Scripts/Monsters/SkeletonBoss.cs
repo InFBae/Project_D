@@ -69,7 +69,7 @@ public class SkeletonBoss : Monster
         rb.isKinematic = true;
         coll.enabled = false;
 
-        GameManager.Sound.Clear();
+        GameManager.Sound.Stop(SoundManager.Sound.BGM);
         GameManager.Sound.Play("SkeletonBossDie");
         DropItem();
         GameManager.Data.CurEXP += 1000;

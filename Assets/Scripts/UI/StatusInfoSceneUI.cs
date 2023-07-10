@@ -8,12 +8,14 @@ using UnityEngine.Events;
 public class StatusInfoSceneUI : SceneUI
 {
     public static UnityAction OnQuickSlotChanged;
+    public static UnityAction OnLevelChanged;
     protected override void Awake()
     {
         base.Awake();
         SetHP(GameManager.Data.CurHP);
         SetSP(GameManager.Data.CurSP);
         SetEXP(GameManager.Data.CurEXP);
+        SetLevel();
         SetQuickSlot();
     }
 
@@ -23,6 +25,7 @@ public class StatusInfoSceneUI : SceneUI
         GameManager.Data.OnHPChanged += SetHP;
         GameManager.Data.OnSPChanged += SetSP;
         OnQuickSlotChanged += SetQuickSlot;
+        OnLevelChanged += SetLevel;
     }
     private void OnDisable()
     {
@@ -30,6 +33,7 @@ public class StatusInfoSceneUI : SceneUI
         GameManager.Data.OnHPChanged -= SetHP;
         GameManager.Data.OnSPChanged -= SetSP;
         OnQuickSlotChanged -= SetQuickSlot;
+        OnLevelChanged -= SetLevel;
     }
 
     public void SetHP(float HP)
@@ -93,40 +97,10 @@ public class StatusInfoSceneUI : SceneUI
         }
     }
 
-    /*
-    public void SetQuickItem(Sprite sprite)
-    {      
-        if (sprite == null)
-            images["QuickItemImage"].color = Color.black;
-        else
-            images["QuickItemImage"].color = Color.white;
-
-        images["QuickItemImage"].sprite = sprite;
-    }
-    public void SetNextItem(Sprite sprite)
+    public void SetLevel()
     {
-        if (sprite == null)
-            images["NextItemImage"].color = Color.black;
-        else
-            images["NextItemImage"].color = Color.white;
-        images["NextItemImage"].sprite = sprite;
+        texts["LevelText"].text = GameManager.Data.PlayerStatusData.Level.ToString();
     }
-    public void SetQuickItemCount(int count)
-    {
-        if (count > 0)
-        {
-            texts["QuickItemCount"].enabled = true;
-            texts["QuickItemCount"].text = count.ToString();
-            images["QuickItemImage"].color = Color.white;
-        }
-        else
-        {
-            texts["QuickItemCount"].enabled = false;
-            texts["QuickItemCount"].text = count.ToString();
-            images["QuickItemImage"].color = Color.black;
-        }       
-    }
-    */
     public void SetEXP(int count)
     {
         texts["EXPCount"].text = count.ToString();

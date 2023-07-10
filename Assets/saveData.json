@@ -24,11 +24,41 @@
     "endurance": 1,
     "resistance": 1,
     "strength": 1,
-    "dexerity": 1,
-    "savedScene": "",
+    "dexerity": 4,
+    "savedScene": "Scenes/DungeonMaps/Room_BossArea",
     "savedSpawnPointIndex": 0,
-    "inventory": [],
-    "quickItemList": [],
+    "inventory": [
+        {
+            "data": {
+                "instanceID": 34446
+            },
+            "count": 1,
+            "name": "BluePotion"
+        },
+        {
+            "data": {
+                "instanceID": 34482
+            },
+            "count": 7,
+            "name": "RedPotion"
+        }
+    ],
+    "quickItemList": [
+        {
+            "data": {
+                "instanceID": 34446
+            },
+            "count": 1,
+            "name": "BluePotion"
+        },
+        {
+            "data": {
+                "instanceID": 34482
+            },
+            "count": 7,
+            "name": "RedPotion"
+        }
+    ],
     "quickItemIndex": 0,
-    "EXP": 0
+    "EXP": 70
 }

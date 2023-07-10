@@ -6,6 +6,11 @@ public class PlayerStatusData : ISerializationCallbackReceiver
     public float defaultHP;
     public float defaultSP;
     public float spRechargeTime;
+
+    public int Level
+    {
+        get { return vitality + endurance + resistance + strength + dexerity - 4; }
+    }
     public float AP { 
         get 
         {

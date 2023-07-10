@@ -8,6 +8,7 @@ public class LevelUpPopUpUI : PopUpUI
 {
     static bool isOpened = false;
     private int startEXP;
+    private int startLevel;
     public string curScene;
     public int spawnPointIndex;
     public static bool IsOpened { get { return isOpened; } }
@@ -17,6 +18,7 @@ public class LevelUpPopUpUI : PopUpUI
         base.Awake();
         InitUI();
         startEXP = GameManager.Data.CurEXP;
+        startLevel = GameManager.Data.PlayerStatusData.Level;
 
         buttons["VitalityUpButton"].onClick.AddListener(OnVitalityUpButton);
         buttons["VitalityDownButton"].onClick.AddListener(OnVitalityDownButton);
@@ -218,7 +220,12 @@ public class LevelUpPopUpUI : PopUpUI
         GameManager.Data.PlayerStatusData.strength = strengthCount;
         GameManager.Data.PlayerStatusData.dexerity = dexerityCount;
 
-        GameManager.Sound.Play("LevelUp");
+        if (startLevel != GameManager.Data.PlayerStatusData.Level)
+        {
+            GameManager.Sound.Play("LevelUp");
+            StatusInfoSceneUI.OnLevelChanged?.Invoke();
+        }
+        
         startEXP = GameManager.Data.CurEXP;
     }
 
